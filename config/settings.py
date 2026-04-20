@@ -120,7 +120,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = BASE_DIR / 'media'
+MEDIA_URL = '/app/media/'
 MEDIA_ROOT = Path(os.getenv('MEDIA_ROOT', BASE_DIR / 'media'))
 SERVE_MEDIA = os.getenv('SERVE_MEDIA', 'True').lower() in {'1', 'true', 'yes', 'on'}
 
