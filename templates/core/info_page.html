@@ -1,0 +1,247 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ page.title }} | Fundacion Winay{% endblock %}
+
+{% block extra_css %}
+        .page-hero h1{font-size:clamp(2.2rem,4vw,3.8rem)}
+        .page-hero p{max-width:58ch}
+        .page-section h2{font-size:1.45rem}
+        .mission-layout{
+            display:grid;
+            grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+            gap:24px;
+            margin:28px 0 42px;
+        }
+        .mission-article{
+            position:relative;
+            margin:28px 0 42px;
+            margin:0;
+            padding:36px;
+            border:1px solid rgba(255,255,255,.56);
+            border-radius:28px;
+            background:
+                radial-gradient(circle at top right, rgba(239,224,180,.45), transparent 30%),
+                rgba(255,252,247,.92);
+            box-shadow:var(--shadow);
+        }
+        .mission-article::before{
+            content:"";
+            position:absolute;
+            inset:0 auto 0 0;
+            width:8px;
+            border-radius:28px 0 0 28px;
+            background:linear-gradient(180deg,var(--brand),var(--earth));
+        }
+        .mission-article h2{
+            margin-bottom:22px;
+            font-size:clamp(2rem,3vw,2.9rem);
+        }
+        .mission-lead{
+            margin-bottom:22px;
+            padding:20px 22px;
+            border:1px solid rgba(108,143,67,.16);
+            border-radius:22px;
+            background:rgba(255,255,255,.52);
+        }
+        .mission-article p{
+            margin:0 0 24px;
+            color:var(--muted);
+            font-size:1.04rem;
+            line-height:1.95;
+        }
+        .mission-article p:last-child{margin-bottom:0}
+        .mission-cards{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:16px;
+            margin-top:28px;
+        }
+        .mission-card{
+            display:grid;
+            gap:14px;
+            padding:22px;
+            border:1px solid rgba(108,143,67,.14);
+            border-radius:22px;
+            background:rgba(255,255,255,.54);
+        }
+        .mission-card-head{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+        .mission-card-icon{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:46px;
+            height:46px;
+            border-radius:16px;
+            background:var(--brand-soft);
+            color:var(--brand-deep);
+        }
+        .mission-card h3{
+            margin:0;
+            font-size:1.2rem;
+        }
+        .mission-card p{
+            margin:0;
+            font-size:.98rem;
+            line-height:1.8;
+        }
+        .mission-side{
+            display:grid;
+            gap:18px;
+        }
+        .mission-aside-card{
+            padding:24px;
+            border:1px solid rgba(255,255,255,.56);
+            border-radius:24px;
+            background:rgba(255,252,247,.88);
+            box-shadow:var(--shadow);
+        }
+        .mission-aside-card h3{
+            margin-bottom:14px;
+            font-size:1.3rem;
+        }
+        .mission-aside-card p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.8;
+        }
+        .mission-points{
+            display:grid;
+            gap:12px;
+            margin-top:16px;
+        }
+        .mission-point{
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+            padding:14px 0;
+            border-top:1px solid rgba(104,84,55,.12);
+        }
+        .mission-point:first-child{
+            padding-top:0;
+            border-top:none;
+        }
+        .mission-point strong{
+            display:block;
+            margin-bottom:4px;
+            color:var(--ink);
+        }
+        .mission-highlight{
+            background:linear-gradient(145deg, rgba(108,143,67,.92), rgba(78,107,47,.92));
+            color:#fff9f0;
+        }
+        .mission-highlight h3,
+        .mission-highlight p,
+        .mission-highlight strong{
+            color:inherit;
+        }
+        .page-section{overflow:hidden}
+        .page-section::before{
+            content:"";
+            position:absolute;
+            inset:0 auto auto 0;
+            width:100%;
+            height:6px;
+            background:linear-gradient(90deg,var(--brand),var(--earth));
+        }
+        {% if current_page == 'mission' or current_page == 'about' %}
+        .page-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+        {% endif %}
+        @media (max-width:980px){
+            .mission-layout{grid-template-columns:1fr}
+        }
+        @media (max-width:720px){
+            .mission-article{padding:26px}
+            .mission-cards{grid-template-columns:1fr}
+        }
+{% endblock %}
+
+{% block content %}
+    <main class="shell">
+        {% if current_page == 'mission' %}
+            <section class="mission-layout">
+                <article class="mission-article">
+                    <div class="eyebrow"><svg class="icon icon-sm"><use href="#icon-target"></use></svg>{{ page.eyebrow }}</div>
+                    <h2>{{ page.title }}</h2>
+                    <div class="mission-lead">
+                        <p>{{ page.lead }}</p>
+                    </div>
+                    <div class="mission-cards">
+                        <article class="mission-card">
+                            <div class="mission-card-head">
+                                <span class="mission-card-icon"><svg class="icon"><use href="#icon-heart"></use></svg></span>
+                                <h3>Bienestar comunitario</h3>
+                            </div>
+                            <p>{{ page.sections.0.body }}</p>
+                        </article>
+                        <article class="mission-card">
+                            <div class="mission-card-head">
+                                <span class="mission-card-icon"><svg class="icon"><use href="#icon-users"></use></svg></span>
+                                <h3>Valores que guian</h3>
+                            </div>
+                            <p>{{ page.sections.1.body }}</p>
+                        </article>
+                    </div>
+                </article>
+                <aside class="mission-side">
+                    <section class="mission-aside-card mission-highlight">
+                        <div class="eyebrow" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.16);color:#fffaf1;"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>Compromiso</div>
+                        <h3>Transformar desde la educacion y la solidaridad</h3>
+                        <p>En la Fundacion Winay creemos firmemente en el poder del trabajo conjunto para construir un futuro mas justo y equitativo para todos.</p>
+                    </section>
+                    <section class="mission-aside-card">
+                        <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Ejes de accion</div>
+                        <div class="mission-points">
+                            <div class="mission-point">
+                                <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-target"></use></svg></span>
+                                <div>
+                                    <strong>Educacion y desarrollo</strong>
+                                    <p>Promovemos procesos que fortalecen habilidades, autonomia y proyectos de vida.</p>
+                                </div>
+                            </div>
+                            <div class="mission-point">
+                                <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-heart"></use></svg></span>
+                                <div>
+                                    <strong>Cuidado y dignidad</strong>
+                                    <p>Actuamos con respeto por cada persona y con compromiso real frente a las necesidades del territorio.</p>
+                                </div>
+                            </div>
+                            <div class="mission-point">
+                                <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-users"></use></svg></span>
+                                <div>
+                                    <strong>Trabajo colectivo</strong>
+                                    <p>Construimos soluciones junto a familias, instituciones y referentes comunitarios.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </section>
+        {% else %}
+            <section class="page-hero">
+                <div class="eyebrow"><svg class="icon icon-sm"><use href="#icon-target"></use></svg>{{ page.eyebrow }}</div>
+                <h1>{{ page.title }}</h1>
+                <p>{{ page.lead }}</p>
+                <a class="btn" href="mailto:contacto@winay.local"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Contactar a la fundacion</a>
+            </section>
+
+            <section class="page-grid">
+                {% for section in page.sections %}
+                    <article class="page-section">
+                        <div class="eyebrow">
+                            {% if current_page == 'about' %}<svg class="icon icon-sm"><use href="#icon-users"></use></svg>{% endif %}
+                            {% if current_page == 'services' or current_page == 'academy' %}<svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg>{% endif %}
+                            {% if current_page == 'technology' %}<svg class="icon icon-sm"><use href="#icon-network"></use></svg>{% endif %}
+                            Fundacion Winay
+                        </div>
+                        <h2>{{ section.title }}</h2>
+                        <p>{{ section.body }}</p>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </main>
+{% endblock %}

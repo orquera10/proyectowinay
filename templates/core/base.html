@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fundacion Winay | Crecimiento Eterno{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ favicon_url }}">
+    <link rel="shortcut icon" type="image/png" href="{{ favicon_url }}">
+    <style>
+        :root{
+            --bg:#f5efe3;
+            --bg-soft:#fbf7f0;
+            --surface:#fffaf2;
+            --surface-strong:#fffdf8;
+            --ink:#2f2419;
+            --muted:#6f6355;
+            --line:rgba(104,84,55,.16);
+            --line-strong:rgba(104,84,55,.28);
+            --brand:#6c8f43;
+            --brand-deep:#4e6b2f;
+            --brand-soft:#dfe8c8;
+            --earth:#c4874a;
+            --sun:#efe0b4;
+            --accent:#8f5f3d;
+            --shadow:0 22px 55px rgba(84,63,38,.10);
+            --radius-xl:34px;
+            --radius-lg:26px;
+            --radius-md:18px;
+            --radius-sm:12px;
+        }
+        *{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{
+            margin:0;
+            color:var(--ink);
+            font-family:"Segoe UI Variable Text","Candara","Trebuchet MS",sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(239,224,180,.55), transparent 26%),
+                radial-gradient(circle at 85% 12%, rgba(108,143,67,.10), transparent 24%),
+                linear-gradient(180deg, #f6f0e6 0%, #f3ebdd 100%);
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+        body::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            background-image:linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+            background-size:26px 26px;
+            mask-image:linear-gradient(180deg, rgba(0,0,0,.16), transparent 68%);
+            z-index:-2;
+        }
+        a{color:inherit;text-decoration:none}
+        .shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
+        .top{
+            position:relative;
+            margin:20px auto 0;
+            min-height:290px;
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,.34);
+            border-radius:var(--radius-xl);
+            background:
+                url('{{ brand_banner_url }}') center/cover no-repeat;
+            box-shadow:var(--shadow);
+            animation:rise .8s ease both;
+        }
+        .top::after{
+            content:none;
+        }
+        .brand-kicker,
+        .eyebrow,
+        .label{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:9px 14px;
+            margin-bottom:16px;
+            border:1px solid rgba(255,255,255,.26);
+            border-radius:999px;
+            background:rgba(255,250,242,.12);
+            color:#fff6e8;
+            text-transform:uppercase;
+            letter-spacing:.14em;
+            font:700 .72rem "Candara","Segoe UI Variable Display",sans-serif;
+        }
+        .eyebrow,
+        .label{
+            background:var(--brand-soft);
+            border-color:rgba(108,143,67,.18);
+            color:var(--brand-deep);
+        }
+        .icon{width:1.1rem;height:1.1rem;display:inline-block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+        .icon-sm{width:.95rem;height:.95rem}
+        .icon-chip{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:40px;
+            height:40px;
+            border-radius:14px;
+            background:rgba(108,143,67,.12);
+            color:var(--brand-deep);
+        }
+        .top-copy h1,
+        h1,h2,h3{
+            margin:0 0 12px;
+            font-family:"Constantia","Palatino Linotype","Book Antiqua",serif;
+            line-height:1.02;
+            letter-spacing:-.02em;
+        }
+        .top-copy h1{
+            max-width:11ch;
+            color:#fff9f0;
+            font-size:clamp(2.8rem,5vw,5rem);
+        }
+        .top-copy p{
+            max-width:56ch;
+            margin:0;
+            color:rgba(255,247,236,.88);
+            font-size:1.05rem;
+            line-height:1.8;
+        }
+        .top-panel{
+            display:grid;
+            gap:14px;
+            padding:24px;
+            border:1px solid rgba(255,255,255,.18);
+            border-radius:24px;
+            background:rgba(255,248,238,.14);
+            backdrop-filter:blur(12px);
+            color:#fff7ec;
+        }
+        .top-panel strong{
+            font:700 1.35rem "Constantia","Palatino Linotype",serif;
+        }
+        .top-panel p{
+            margin:0;
+            color:rgba(255,247,236,.84);
+            line-height:1.7;
+        }
+        .top-panel a{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            color:#fff8ea;
+            font-weight:700;
+        }
+        .nav{
+            position:sticky;
+            top:12px;
+            z-index:20;
+            margin-top:14px;
+            border:1px solid rgba(255,255,255,.56);
+            border-radius:20px;
+            background:rgba(255,251,246,.82);
+            backdrop-filter:blur(16px);
+            box-shadow:0 14px 35px rgba(84,63,38,.08);
+            animation:rise .95s ease both;
+        }
+        .nav-bar{
+            display:none;
+        }
+        .nav-toggle{
+            display:none;
+            align-items:center;
+            justify-content:center;
+            width:42px;
+            height:42px;
+            border:1px solid var(--line);
+            border-radius:12px;
+            background:var(--surface);
+            color:var(--brand-deep);
+            cursor:pointer;
+        }
+        .nav-inner,.ticker{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 14px}
+        .nav-inner{
+            justify-content:center;
+        }
+        .nav a{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            min-height:40px;
+            padding:9px 16px;
+            border:1px solid transparent;
+            border-radius:999px;
+            color:var(--muted);
+            font:700 .9rem "Candara","Segoe UI Variable Display",sans-serif;
+            transition:transform .2s ease, background .25s ease, color .25s ease, border-color .25s ease;
+        }
+        .nav a:hover,
+        .nav a.is-active{
+            color:var(--brand-deep);
+            background:var(--brand-soft);
+            border-color:rgba(108,143,67,.22);
+            transform:translateY(-1px);
+        }
+        .ticker{
+            margin-top:16px;
+            border:1px solid rgba(255,255,255,.5);
+            border-radius:20px;
+            background:rgba(255,251,246,.8);
+            box-shadow:0 12px 28px rgba(84,63,38,.06);
+            color:var(--muted);
+            animation:rise 1.05s ease both;
+        }
+        .ticker strong{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            color:var(--brand-deep);
+            font:700 .9rem "Candara","Segoe UI Variable Display",sans-serif;
+            text-transform:uppercase;
+            letter-spacing:.12em;
+        }
+        .ticker-rotator{
+            position:relative;
+            display:grid;
+            min-width:0;
+            flex:1;
+        }
+        .ticker-item{
+            grid-area:1 / 1;
+            opacity:0;
+            transform:translateY(6px);
+            transition:opacity .35s ease, transform .35s ease;
+            pointer-events:none;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .ticker-item.is-active{
+            opacity:1;
+            transform:translateY(0);
+            pointer-events:auto;
+        }
+        .card,.section,.sidebar-card,.cta,.detail-card,.page-hero,.page-section,.recent-item,.article{
+            border:1px solid rgba(255,255,255,.54);
+            background:rgba(255,252,247,.86);
+            backdrop-filter:blur(10px);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+        }
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            padding:13px 20px;
+            margin-top:18px;
+            border:1px solid transparent;
+            border-radius:999px;
+            background:linear-gradient(135deg,var(--brand),#87a95b);
+            color:#fffaf1;
+            font:700 .95rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.04em;
+            transition:transform .2s ease, box-shadow .25s ease;
+        }
+        .btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(108,143,67,.22)}
+        .page-hero{
+            position:relative;
+            overflow:hidden;
+            margin-top:28px;
+            padding:42px;
+            background:
+                radial-gradient(circle at top right, rgba(239,224,180,.65), transparent 32%),
+                linear-gradient(135deg, rgba(255,252,246,.98), rgba(243,236,221,.96));
+        }
+        .page-hero::after{
+            content:"";
+            position:absolute;
+            inset:auto -55px -55px auto;
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(108,143,67,.16), transparent 70%);
+        }
+        .page-hero p,.section p,.sidebar-card p,.card p,.article,.recent-item,.page-section p{
+            color:var(--muted);
+            line-height:1.82;
+        }
+        .page-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:28px 0 42px}
+        .page-section{
+            position:relative;
+            padding:28px;
+            transition:transform .22s ease,border-color .22s ease,background .22s ease;
+        }
+        .page-section:hover{
+            transform:translateY(-4px);
+            border-color:var(--line-strong);
+            background:rgba(255,253,249,.96);
+        }
+        .contact-band{
+            width:min(1180px,calc(100% - 32px));
+            margin:22px auto 0;
+            padding:26px;
+            border:1px solid rgba(255,255,255,.56);
+            border-radius:24px;
+            background:
+                linear-gradient(135deg, rgba(255,252,246,.96), rgba(244,236,220,.96));
+            box-shadow:var(--shadow);
+        }
+        .contact-grid{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) minmax(320px,.85fr);
+            gap:28px;
+            align-items:start;
+        }
+        .contact-panel,
+        .social-panel{
+            display:grid;
+            gap:14px;
+        }
+        .contact-band h2{
+            margin:0;
+            font-size:clamp(1.3rem,2vw,1.75rem);
+        }
+        .contact-band p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.75;
+        }
+        .contact-actions,.social-grid{display:grid;gap:10px}
+        .contact-pill,
+        .social-card{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            padding:14px 16px;
+            border:1px solid var(--line);
+            border-radius:18px;
+            background:rgba(255,255,255,.42);
+        }
+        .contact-pill strong,
+        .social-card strong{
+            display:block;
+            margin-bottom:4px;
+            color:var(--ink);
+            font-size:.95rem;
+        }
+        .contact-pill span,
+        .social-card span{
+            color:var(--muted);
+            font-size:.92rem;
+            line-height:1.5;
+        }
+        .site-footer{
+            width:min(1180px,calc(100% - 32px));
+            margin:18px auto 28px;
+            padding:18px 20px;
+            color:var(--muted);
+            text-align:center;
+            font-size:.92rem;
+        }
+        .footer-signature{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+        }
+        .footer-badge{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:30px;
+            height:30px;
+            border-radius:999px;
+            background:var(--brand-soft);
+            color:var(--brand-deep);
+        }
+        .back-to-top{
+            position:fixed;
+            right:22px;
+            bottom:22px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:48px;
+            height:48px;
+            border:none;
+            border-radius:999px;
+            background:linear-gradient(135deg,var(--brand),#87a95b);
+            color:#fffaf1;
+            box-shadow:0 16px 30px rgba(108,143,67,.24);
+            cursor:pointer;
+            opacity:0;
+            visibility:hidden;
+            transform:translateY(10px);
+            transition:opacity .25s ease, transform .25s ease, visibility .25s ease;
+            z-index:30;
+        }
+        .back-to-top svg{transform:rotate(-90deg)}
+        .back-to-top.is-visible{
+            opacity:1;
+            visibility:visible;
+            transform:translateY(0);
+        }
+        @keyframes rise{
+            from{opacity:0;transform:translateY(18px)}
+            to{opacity:1;transform:translateY(0)}
+        }
+        @media (max-width:980px){
+            .page-grid,.contact-grid{grid-template-columns:1fr}
+        }
+        @media (max-width:720px){
+            .shell{width:100%}
+            .top,
+            .nav,
+            .ticker,
+            .page-hero,
+            .contact-band,
+            .site-footer{
+                width:100%;
+                margin-left:0;
+                margin-right:0;
+            }
+            .top{min-height:180px}
+            .nav-bar{
+                display:flex;
+                align-items:center;
+                justify-content:flex-end;
+                padding:10px;
+            }
+            .nav-toggle{display:inline-flex}
+            .nav-inner{
+                display:none;
+                flex-direction:column;
+                align-items:stretch;
+                gap:8px;
+                padding:0 10px 12px;
+            }
+            .nav.is-open .nav-inner{display:flex}
+            .nav a{width:100%}
+            .page-hero{padding:28px 22px}
+            .page-grid{gap:16px;padding:20px 0 32px}
+            .contact-band{padding:20px;border-radius:20px}
+            .ticker-item{white-space:normal}
+        }
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" style="position:absolute">
+        <symbol id="icon-heart" viewBox="0 0 24 24">
+            <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path>
+        </symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24">
+            <path d="M3 11.5L12 4l9 7.5"></path>
+            <path d="M5 10.5V20h14v-9.5"></path>
+        </symbol>
+        <symbol id="icon-target" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2v3M22 12h-3M12 22v-3M2 12h3"></path>
+        </symbol>
+        <symbol id="icon-users" viewBox="0 0 24 24">
+            <path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"></path>
+            <circle cx="9.5" cy="8" r="3"></circle>
+            <path d="M22 19v-1a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 4.13a3 3 0 0 1 0 5.74"></path>
+        </symbol>
+        <symbol id="icon-briefcase" viewBox="0 0 24 24">
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <rect x="3" y="7" width="18" height="13" rx="2"></rect>
+            <path d="M3 12h18"></path>
+        </symbol>
+        <symbol id="icon-network" viewBox="0 0 24 24">
+            <rect x="10" y="3" width="4" height="4" rx="1"></rect>
+            <rect x="4" y="17" width="4" height="4" rx="1"></rect>
+            <rect x="16" y="17" width="4" height="4" rx="1"></rect>
+            <path d="M12 7v4M12 11H6v6M12 11h6v6"></path>
+        </symbol>
+        <symbol id="icon-wave" viewBox="0 0 24 24">
+            <path d="M2 12c2 0 2-4 4-4s2 8 4 8 2-8 4-8 2 4 4 4 2-2 4-2"></path>
+        </symbol>
+        <symbol id="icon-mail" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M4 7l8 6 8-6"></path>
+        </symbol>
+        <symbol id="icon-arrow-right" viewBox="0 0 24 24">
+            <path d="M5 12h14"></path>
+            <path d="M13 6l6 6-6 6"></path>
+        </symbol>
+        <symbol id="icon-calendar" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+            <path d="M8 3v4M16 3v4M3 10h18"></path>
+        </symbol>
+        <symbol id="icon-folder" viewBox="0 0 24 24">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path>
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h16"></path>
+        </symbol>
+        <symbol id="icon-code" viewBox="0 0 24 24">
+            <path d="M8 8l-4 4 4 4"></path>
+            <path d="M16 8l4 4-4 4"></path>
+            <path d="M14 4l-4 16"></path>
+        </symbol>
+        <symbol id="icon-phone" viewBox="0 0 24 24">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.15 12.8 19.8 19.8 0 0 1 2.08 4.09 2 2 0 0 1 4.07 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.6a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.48-1.25a2 2 0 0 1 2.11-.45c.83.3 1.7.51 2.6.63A2 2 0 0 1 22 16.92z"></path>
+        </symbol>
+        <symbol id="icon-whatsapp" viewBox="0 0 24 24">
+            <path d="M20 11.5A8.5 8.5 0 0 1 7.4 19l-3.4 1 1.1-3.2A8.5 8.5 0 1 1 20 11.5z"></path>
+            <path d="M9.8 8.8c.2-.4.4-.4.6-.4h.5c.1 0 .4 0 .5.4.2.5.7 1.7.8 1.8.1.2.1.4 0 .6-.1.2-.2.4-.4.5l-.4.4c-.1.1-.2.2-.1.4.1.2.5.9 1.1 1.4.7.6 1.3.8 1.5.9.2.1.3 0 .5-.1l.6-.7c.1-.2.3-.2.5-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.4 0 .2 0 1-.7 1.4-.7.4-1.6.4-2.2.2-.6-.2-2.3-.8-3.8-2.2-1.2-1.1-2-2.5-2.3-3.1-.2-.6-.1-1.4.3-1.9.4-.5.8-.8 1-.8z"></path>
+        </symbol>
+        <symbol id="icon-instagram" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"></circle>
+        </symbol>
+        <symbol id="icon-facebook" viewBox="0 0 24 24">
+            <path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v3H6v4h3v5h4v-5h3.2l.8-4H13V9c0-.6.4-1 1-1z"></path>
+        </symbol>
+    </svg>
+    <header class="shell top" aria-label="Banner institucional"></header>
+    <nav class="shell nav" data-nav>
+        <div class="nav-bar">
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-links" aria-label="Abrir menu" data-nav-toggle>
+                <svg class="icon"><use href="#icon-menu"></use></svg>
+            </button>
+        </div>
+        <div class="nav-inner" id="site-nav-links">
+            {% for item in nav_pages %}
+                <a href="{% if item.external_url %}{{ item.external_url }}{% else %}{% url item.url_name %}{% if item.fragment %}#{{ item.fragment }}{% endif %}{% endif %}"{% if item.external_url %} target="_blank" rel="noopener noreferrer"{% endif %}{% if current_page == item.slug %} class="is-active"{% endif %}>
+                    {% if item.slug == 'home' %}<svg class="icon icon-sm"><use href="#icon-home"></use></svg>{% endif %}
+                    {% if item.slug == 'mission' %}<svg class="icon icon-sm"><use href="#icon-target"></use></svg>{% endif %}
+                    {% if item.slug == 'academy' %}<svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg>{% endif %}
+                    {% if item.slug == 'news' %}<svg class="icon icon-sm"><use href="#icon-wave"></use></svg>{% endif %}
+                    {{ item.title }}
+                </a>
+            {% endfor %}
+        </div>
+    </nav>
+    {% block ticker %}
+        <div class="shell ticker" data-ticker>
+            <strong><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>Novedades</strong>
+            <div class="ticker-rotator">
+                {% for item in ticker_items %}
+                    <span class="ticker-item{% if forloop.first %} is-active{% endif %}">
+                        {% if item.get_absolute_url %}<a href="{{ item.get_absolute_url }}">{% endif %}
+                        {{ item.title }}{% if item.excerpt %} - {{ item.excerpt }}{% endif %}
+                        {% if item.get_absolute_url %}</a>{% endif %}
+                    </span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
+    {% block content %}{% endblock %}
+    <section class="contact-band" aria-label="Contacto y redes">
+        <div class="contact-grid">
+            <div class="contact-panel">
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Contacto</div>
+                <div class="contact-intro">
+                    <h2>Conversemos sobre alianzas, acompanamiento y proyectos con impacto social</h2>
+                    <p>Estamos abiertos a articular con familias, instituciones, organizaciones, voluntariado y actores que compartan una mirada de desarrollo humano integral.</p>
+                </div>
+                <div class="contact-actions">
+                    <a class="contact-pill" href="mailto:contacto@winay.local">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg></span>
+                        <div><strong>Email</strong><span>contacto@winay.local</span></div>
+                    </a>
+                    <a class="contact-pill" href="tel:+540000000000">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-phone"></use></svg></span>
+                        <div><strong>Telefono</strong><span>+54 000 000 0000</span></div>
+                    </a>
+                    <a class="contact-pill" href="#" aria-label="WhatsApp de Fundacion Winay">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-whatsapp"></use></svg></span>
+                        <div><strong>WhatsApp</strong><span>Canal directo para consultas y articulacion</span></div>
+                    </a>
+                </div>
+            </div>
+            <div class="social-panel">
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Redes</div>
+                <p>Compartimos actividades, convocatorias y el trabajo cotidiano que sostenemos junto a la comunidad.</p>
+                <div class="social-grid">
+                    <a class="social-card" href="#" aria-label="Instagram de Fundacion Winay">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-instagram"></use></svg></span>
+                        <div><strong>Instagram</strong><span>@fundacionwinay</span></div>
+                    </a>
+                    <a class="social-card" href="#" aria-label="Facebook de Fundacion Winay">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-facebook"></use></svg></span>
+                        <div><strong>Facebook</strong><span>Fundacion Winay</span></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="site-footer">
+        <span class="footer-signature">
+            <span class="footer-badge"><svg class="icon icon-sm"><use href="#icon-code"></use></svg></span>
+            <span>Desarrollado por Dario Orquera</span>
+        </span>
+    </footer>
+    <button class="back-to-top" type="button" aria-label="Volver arriba" data-back-to-top>
+        <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+    </button>
+    {% block extra_js %}{% endblock %}
+    <script>
+        (function () {
+            var nav = document.querySelector('[data-nav]');
+            var toggle = document.querySelector('[data-nav-toggle]');
+            if (!nav || !toggle) return;
+
+            toggle.addEventListener('click', function () {
+                var isOpen = nav.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                toggle.setAttribute('aria-label', isOpen ? 'Cerrar menu' : 'Abrir menu');
+            });
+        }());
+
+        (function () {
+            var button = document.querySelector('[data-back-to-top]');
+            if (!button) return;
+
+            var toggleVisibility = function () {
+                if (window.scrollY > 260) {
+                    button.classList.add('is-visible');
+                } else {
+                    button.classList.remove('is-visible');
+                }
+            };
+
+            button.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            window.addEventListener('scroll', toggleVisibility, { passive: true });
+            toggleVisibility();
+        }());
+
+        (function () {
+            var ticker = document.querySelector('[data-ticker]');
+            if (!ticker) return;
+
+            var items = ticker.querySelectorAll('.ticker-item');
+            if (items.length < 2) return;
+
+            var index = 0;
+            window.setInterval(function () {
+                items[index].classList.remove('is-active');
+                index = (index + 1) % items.length;
+                items[index].classList.add('is-active');
+            }, 3600);
+        }());
+    </script>
+</body>
+</html>

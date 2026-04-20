@@ -1,0 +1,177 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ post.title }} | Fundacion Winay{% endblock %}
+
+{% block extra_css %}
+        .detail-topbar{padding:24px 0 16px}
+        .back{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:12px 16px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            color:var(--brand-deep);
+            background:rgba(255,255,255,.5);
+            backdrop-filter:blur(12px);
+        }
+        .hero{
+            min-height:420px;
+            padding:40px;
+            display:flex;
+            align-items:end;
+            overflow:hidden;
+            border:none;
+            border-radius:var(--radius-xl);
+            position:relative;
+            background:
+                radial-gradient(circle at top right, rgba(239,224,180,.22), transparent 26%),
+                linear-gradient(180deg,rgba(47,36,25,.08),rgba(47,36,25,.74)),
+                linear-gradient(135deg,rgba(196,135,74,.60),rgba(108,143,67,.76));
+            box-shadow:var(--shadow);
+        }
+        .hero::before{
+            content:"";
+            position:absolute;
+            inset:-22px;
+            background-image:var(--hero-banner);
+            background-size:cover;
+            background-position:center;
+            filter:blur(18px) saturate(.9);
+            transform:scale(1.08);
+            opacity:.95;
+        }
+        .hero::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+                radial-gradient(circle at top right, rgba(239,224,180,.20), transparent 26%),
+                linear-gradient(180deg,rgba(47,36,25,.14),rgba(47,36,25,.78)),
+                linear-gradient(135deg,rgba(196,135,74,.34),rgba(108,143,67,.34));
+        }
+        .hero > div{
+            position:relative;
+            z-index:1;
+        }
+        h1,h2,h3,p{margin-top:0}
+        .hero h1{
+            font-size:clamp(1.45rem,2.6vw,2.45rem);
+            max-width:16ch;
+            line-height:1.04;
+            text-wrap:balance;
+        }
+        .excerpt,.body,.recent-item span{color:#f5eadc;line-height:1.8}
+        .meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;color:#f1ddc4}
+        .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:28px;padding:28px 0 42px}
+        .article,.sidebar-card{padding:28px}
+        .body-media{
+            overflow:hidden;
+            margin:0 auto 24px;
+            width:min(50%, 780px);
+            border:1px solid rgba(255,255,255,.52);
+            border-radius:22px;
+            background:rgba(255,255,255,.56);
+        }
+        .body-media img{
+            display:block;
+            width:100%;
+            height:auto;
+        }
+        .body{
+            display:grid;
+            gap:18px;
+        }
+        .body h3{
+            margin:10px 0 0;
+            color:var(--ink);
+            font-size:clamp(1.15rem,1.7vw,1.45rem);
+            line-height:1.2;
+            text-transform:none;
+            letter-spacing:0;
+        }
+        .body p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.9;
+        }
+        .body ul{
+            margin:0;
+            padding-left:22px;
+            color:var(--muted);
+        }
+        .body li{
+            margin-bottom:10px;
+            line-height:1.85;
+        }
+        .sidebar{display:grid;gap:20px}
+        .recent-list{display:grid;gap:14px}
+        .recent-item{
+            display:block;
+            padding:18px;
+            background:rgba(255,255,255,.46);
+            transition:transform .2s ease,border-color .2s ease;
+        }
+        .recent-item:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+        .recent-item strong{display:block;margin-bottom:8px;color:var(--ink)}
+        @media (max-width:900px){
+            .layout{grid-template-columns:1fr}
+            .hero{padding:28px}
+            .body-media{width:min(100%, 780px)}
+        }
+{% endblock %}
+
+{% block content %}
+    <main class="shell">
+        <section class="hero" style="margin-top:18px;{% if post.banner_image_url %}--hero-banner:url('{{ post.banner_image_url }}');{% else %}--hero-banner:none;{% endif %}">
+            <div>
+                {% if post.eyebrow %}<div class="eyebrow"><svg class="icon icon-sm"><use href="#icon-heart"></use></svg>{{ post.eyebrow }}</div>{% endif %}
+                <h1>{{ post.title }}</h1>
+                <p class="excerpt">{{ post.excerpt }}</p>
+                <div class="meta">
+                    <span><svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>Publicado el {{ post.published_at|date:"j \\d\\e F, Y" }}</span>
+                </div>
+            </div>
+        </section>
+        <section class="layout">
+            <article class="article">
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-folder"></use></svg>Detalle</div>
+                {% if post.body_image_url %}
+                    <figure class="body-media">
+                        <img src="{{ post.body_image_url }}" alt="{{ post.title }}">
+                    </figure>
+                {% endif %}
+                <div class="body">
+                    {% for block in post.body_blocks %}
+                        {% if block.type == 'heading' %}
+                            <h3>{{ block.text }}</h3>
+                        {% elif block.type == 'list' %}
+                            <ul>
+                                {% for item in block.items %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>{{ block.text }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </article>
+            <aside class="sidebar">
+                <section class="sidebar-card">
+                    <div class="label"><svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg>Mas entradas</div>
+                    <div class="recent-list">
+                        {% for item in recent_posts %}
+                            <a class="recent-item" href="{{ item.get_absolute_url }}">
+                                <strong>{{ item.title }}</strong>
+                                <span>{{ item.excerpt }}</span>
+                            </a>
+                        {% empty %}
+                            <span>No hay otras entradas publicadas todavia.</span>
+                        {% endfor %}
+                    </div>
+                </section>
+            </aside>
+        </section>
+    </main>
+{% endblock %}

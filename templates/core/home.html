@@ -1,0 +1,398 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+        .impact-strip{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:16px;
+            padding:28px 0 10px;
+        }
+        .impact-card{
+            padding:22px;
+            border:1px solid rgba(255,255,255,.52);
+            border-radius:24px;
+            background:rgba(255,251,245,.84);
+            box-shadow:var(--shadow);
+        }
+        .impact-card strong{
+            display:block;
+            margin-bottom:8px;
+            color:var(--brand-deep);
+            font:700 1.55rem "Constantia","Palatino Linotype",serif;
+        }
+        .impact-card p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.7;
+        }
+        .featured-wrap{padding:18px 0 12px}
+        .featured-head{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:18px;
+            align-items:end;
+            margin-bottom:18px;
+        }
+        .featured-head p{
+            margin:0;
+            max-width:62ch;
+            color:var(--muted);
+            line-height:1.8;
+        }
+        .featured-wrap h2,
+        .post-feed h2{
+            margin-bottom:10px;
+            font-size:clamp(2rem,3vw,2.8rem);
+        }
+        .post-feed{padding:18px 0 42px}
+        .feed-search{
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin:0 0 18px;
+        }
+        .feed-search input{
+            flex:1;
+            min-width:0;
+            height:42px;
+            padding:0 14px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            background:rgba(255,255,255,.5);
+            color:var(--ink);
+            font:500 .95rem "Segoe UI Variable Text","Trebuchet MS","Segoe UI",sans-serif;
+        }
+        .feed-search input::placeholder{color:#8f8171}
+        .feed-search button{
+            height:42px;
+            padding:0 16px;
+            border:1px solid transparent;
+            border-radius:999px;
+            background:linear-gradient(135deg,var(--brand),#87a95b);
+            color:#fffaf1;
+            font:700 .84rem "Candara","Segoe UI Variable Display",sans-serif;
+            text-transform:uppercase;
+            letter-spacing:.05em;
+            cursor:pointer;
+        }
+        .featured-grid{
+            display:grid;
+            grid-template-columns:repeat(6,minmax(0,1fr));
+            gap:14px;
+        }
+        .featured-card{
+            position:relative;
+            overflow:hidden;
+            min-height:220px;
+            border:1px solid rgba(255,255,255,.54);
+            border-radius:24px;
+            background:
+                linear-gradient(180deg, rgba(47,36,25,.04), rgba(47,36,25,.50) 58%, rgba(47,36,25,.86)),
+                linear-gradient(135deg,#b88d5b,#6c8f43);
+            background-size:cover;
+            background-position:center;
+            box-shadow:var(--shadow);
+            transition:transform .22s ease, box-shadow .22s ease;
+        }
+        .featured-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 26px 48px rgba(84,63,38,.14);
+        }
+        .featured-card:nth-child(-n+2){
+            grid-column:span 3;
+            min-height:320px;
+        }
+        .featured-card:nth-child(n+3){
+            grid-column:span 2;
+            min-height:210px;
+        }
+        .featured-card > a,
+        .featured-card > div{
+            position:absolute;
+            inset:0;
+            display:flex;
+            align-items:flex-end;
+            padding:22px;
+        }
+        .featured-overlay{
+            position:absolute;
+            inset:0;
+            background:linear-gradient(180deg, rgba(47,36,25,.02), rgba(47,36,25,.22) 42%, rgba(47,36,25,.82));
+        }
+        .featured-copy{
+            position:relative;
+            z-index:1;
+            max-width:92%;
+        }
+        .featured-copy .eyebrow{
+            margin-bottom:12px;
+            background:rgba(255,248,238,.14);
+            border-color:rgba(255,255,255,.22);
+            color:#fff7ed;
+        }
+        .featured-copy h2,
+        .featured-copy h3{
+            margin-bottom:10px;
+            color:#fff;
+            line-height:1.12;
+            text-shadow:0 4px 18px rgba(0,0,0,.35);
+        }
+        .featured-copy h2{font-size:clamp(1.45rem,2.1vw,2.15rem)}
+        .featured-copy h3{font-size:clamp(1rem,1.3vw,1.28rem)}
+        .featured-meta{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            color:#f1e4d3;
+            font-size:.95rem;
+        }
+        .post-grid{
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:14px;
+        }
+        .post-card{
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,.5);
+            border-radius:18px;
+            background:rgba(255,251,245,.86);
+            box-shadow:var(--shadow);
+            transition:transform .2s ease,border-color .2s ease;
+        }
+        .post-card:hover{
+            transform:translateY(-3px);
+            border-color:var(--line-strong);
+        }
+        .post-card a{
+            display:block;
+            height:100%;
+        }
+        .post-thumb{
+            height:130px;
+            background:
+                linear-gradient(180deg, rgba(47,36,25,.03), rgba(47,36,25,.16)),
+                linear-gradient(135deg,#d8bf93,#93ab72);
+            background-size:cover;
+            background-position:center;
+        }
+        .post-body{
+            display:grid;
+            gap:8px;
+            padding:14px;
+        }
+        .post-body h3{
+            margin:0;
+            font-size:1rem;
+            line-height:1.2;
+            color:var(--ink);
+        }
+        .post-body p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.5;
+            font-size:.92rem;
+        }
+        .post-meta{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            color:#8b7763;
+            font-size:.84rem;
+        }
+        .pagination{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            margin-top:22px;
+            flex-wrap:wrap;
+        }
+        .page-link,
+        .page-current{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:40px;
+            height:40px;
+            padding:0 14px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            background:rgba(255,255,255,.03);
+            color:#dbe7ed;
+        }
+        .page-link:hover{
+            border-color:var(--line-strong);
+            background:rgba(255,255,255,.06);
+        }
+        .page-current{
+            background:linear-gradient(135deg,var(--brand),#8be4ff);
+            color:#04141b;
+            border-color:transparent;
+            font-weight:700;
+        }
+        @media (max-width:980px){
+            .impact-strip,
+            .featured-grid{grid-template-columns:1fr}
+            .post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+            .featured-head{grid-template-columns:1fr}
+            .featured-card,
+            .featured-card:nth-child(-n+2),
+            .featured-card:nth-child(n+3){
+                grid-column:auto;
+                min-height:240px;
+            }
+        }
+        @media (max-width:640px){
+            .featured-wrap,
+            .post-feed{
+                width:100%;
+                padding-left:0;
+                padding-right:0;
+            }
+            .feed-search{flex-direction:column;align-items:stretch}
+            .featured-grid,
+            .post-grid{gap:12px}
+            .post-grid{grid-template-columns:1fr}
+            .featured-card,
+            .post-card{
+                width:100%;
+                border-radius:20px;
+            }
+        }
+{% endblock %}
+
+{% block content %}
+    <section class="shell impact-strip" aria-label="Pilares institucionales">
+        {% for metric in metrics %}
+            <article class="impact-card">
+                <strong>{{ metric.value }}</strong>
+                <p>{{ metric.label }}</p>
+            </article>
+        {% endfor %}
+    </section>
+    <main class="shell featured-wrap">
+        <div class="featured-head">
+            <div>
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-heart"></use></svg>Nuestra tarea</div>
+                <h2>Acciones que acompanian, cuidan y proyectan futuro</h2>
+                <p>La fundacion trabaja desde una mirada integral: educacion, inclusion, cultura, recreacion y construccion de redes para que cada proceso tenga arraigo y continuidad.</p>
+            </div>
+            <a class="btn" href="{% url 'core:mission' %}"><svg class="icon icon-sm"><use href="#icon-arrow-right"></use></svg>Conocer nuestra mision</a>
+        </div>
+        <section class="featured-grid" aria-label="Destacados">
+            {% for item in featured_services %}
+                <article class="featured-card"{% if item.banner_image_url|default:item.image_url %} style="background-image:linear-gradient(180deg, rgba(47,36,25,.04), rgba(47,36,25,.50) 58%, rgba(47,36,25,.86)), url('{{ item.banner_image_url|default:item.image_url }}');"{% endif %}>
+                    <div class="featured-overlay"></div>
+                    {% if item.get_absolute_url %}
+                        <a href="{{ item.get_absolute_url }}">
+                            <div class="featured-copy">
+                                {% if item.eyebrow %}<div class="eyebrow">{{ item.eyebrow }}</div>{% endif %}
+                                {% if forloop.counter <= 2 %}
+                                    <h2>{{ item.title }}</h2>
+                                {% else %}
+                                    <h3>{{ item.title }}</h3>
+                                {% endif %}
+                                <div class="featured-meta">
+                                    <svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>
+                                    <span>{% if item.published_at %}{{ item.published_at|date:"j \\d\\e F, Y" }}{% else %}Destacado institucional{% endif %}</span>
+                                </div>
+                            </div>
+                        </a>
+                    {% else %}
+                        <div>
+                            <div class="featured-copy">
+                                {% if item.eyebrow %}<div class="eyebrow">{{ item.eyebrow }}</div>{% endif %}
+                                {% if forloop.counter <= 2 %}
+                                    <h2>{{ item.title }}</h2>
+                                {% else %}
+                                    <h3>{{ item.title }}</h3>
+                                {% endif %}
+                                <div class="featured-meta">
+                                    <svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>
+                                    <span>{% if item.published_at %}{{ item.published_at|date:"j \\d\\e F, Y" }}{% else %}Destacado institucional{% endif %}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+    <section class="shell post-feed" id="novedades" aria-label="Entradas">
+        <div class="label"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>Historias y novedades</div>
+        <h2>Lo que vamos construyendo con la comunidad</h2>
+        <form class="feed-search" method="get">
+            <input type="search" name="q" value="{{ search_query }}" placeholder="Buscar por titulo de entrada" autocomplete="off" data-live-search>
+            <button type="submit">Buscar</button>
+        </form>
+        <div class="post-grid">
+            {% for item in posts_page %}
+                <article class="post-card">
+                    <a href="{{ item.get_absolute_url }}">
+                        <div class="post-thumb"{% if item.banner_image_url %} style="background-image:linear-gradient(180deg, rgba(47,36,25,.03), rgba(47,36,25,.16)), url('{{ item.banner_image_url }}');"{% endif %}></div>
+                        <div class="post-body">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.excerpt }}</p>
+                            <div class="post-meta">
+                                <svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>
+                                <span>{{ item.published_at|date:"j \\d\\e F, Y" }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            {% empty %}
+                <p>No se encontraron entradas para esa busqueda.</p>
+            {% endfor %}
+        </div>
+        {% if posts_page.paginator.num_pages > 1 %}
+            <nav class="pagination" aria-label="Paginacion de entradas">
+                {% if posts_page.has_previous %}
+                    <a class="page-link" href="?page={{ posts_page.previous_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">Anterior</a>
+                {% endif %}
+                {% for number in posts_page.paginator.page_range %}
+                    {% if number == posts_page.number %}
+                        <span class="page-current">{{ number }}</span>
+                    {% else %}
+                        <a class="page-link" href="?page={{ number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">{{ number }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if posts_page.has_next %}
+                    <a class="page-link" href="?page={{ posts_page.next_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">Siguiente</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            var input = document.querySelector('[data-live-search]');
+            if (!input) return;
+
+            var form = input.form;
+            var timer = null;
+            var initialValue = input.value;
+            var scrollKey = 'home-live-search-scroll';
+
+            try {
+                var storedScroll = window.sessionStorage.getItem(scrollKey);
+                if (storedScroll !== null) {
+                    window.scrollTo({ top: parseInt(storedScroll, 10) || 0, behavior: 'auto' });
+                    window.sessionStorage.removeItem(scrollKey);
+                }
+            } catch (error) {}
+
+            input.addEventListener('input', function () {
+                window.clearTimeout(timer);
+                timer = window.setTimeout(function () {
+                    if (input.value === initialValue) return;
+                    try {
+                        window.sessionStorage.setItem(scrollKey, String(window.scrollY));
+                    } catch (error) {}
+                    form.submit();
+                }, 350);
+            });
+        }());
+    </script>
+{% endblock %}
