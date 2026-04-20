@@ -116,8 +116,8 @@ def get_shared_context(current_page):
     return {
         'nav_pages': NAV_PAGES,
         'current_page': current_page,
-        'brand_banner_url': f"{settings.MEDIA_URL}winayBanner.png",
-        'favicon_url': f"{settings.MEDIA_URL}winayLogo.png",
+        'brand_banner_url': f"{settings.STATIC_URL}winayBanner.png",
+        'favicon_url': f"{settings.STATIC_URL}winayLogo.png",
         'ticker_items': ticker_items or TICKER_FALLBACK,
     }
 
