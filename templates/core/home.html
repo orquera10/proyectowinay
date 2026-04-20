@@ -11,7 +11,7 @@
             padding:22px;
             border:1px solid rgba(255,255,255,.52);
             border-radius:24px;
-            background:rgba(255,251,245,.84);
+            background:rgba(248,252,255,.88);
             box-shadow:var(--shadow);
         }
         .impact-card strong{
@@ -62,14 +62,14 @@
             color:var(--ink);
             font:500 .95rem "Segoe UI Variable Text","Trebuchet MS","Segoe UI",sans-serif;
         }
-        .feed-search input::placeholder{color:#8f8171}
+        .feed-search input::placeholder{color:#7b96aa}
         .feed-search button{
             height:42px;
             padding:0 16px;
             border:1px solid transparent;
             border-radius:999px;
-            background:linear-gradient(135deg,var(--brand),#87a95b);
-            color:#fffaf1;
+            background:linear-gradient(135deg,var(--brand),#59b7d8);
+            color:#f4fbff;
             font:700 .84rem "Candara","Segoe UI Variable Display",sans-serif;
             text-transform:uppercase;
             letter-spacing:.05em;
@@ -77,7 +77,7 @@
         }
         .featured-grid{
             display:grid;
-            grid-template-columns:repeat(6,minmax(0,1fr));
+            grid-template-columns:repeat(12,minmax(0,1fr));
             gap:14px;
         }
         .featured-card{
@@ -87,8 +87,8 @@
             border:1px solid rgba(255,255,255,.54);
             border-radius:24px;
             background:
-                linear-gradient(180deg, rgba(47,36,25,.04), rgba(47,36,25,.50) 58%, rgba(47,36,25,.86)),
-                linear-gradient(135deg,#b88d5b,#6c8f43);
+                linear-gradient(180deg, rgba(12,41,64,.06), rgba(12,41,64,.48) 58%, rgba(12,41,64,.84)),
+                linear-gradient(135deg,#4ba3c7,#2c7fb8);
             background-size:cover;
             background-position:center;
             box-shadow:var(--shadow);
@@ -96,15 +96,27 @@
         }
         .featured-card:hover{
             transform:translateY(-4px);
-            box-shadow:0 26px 48px rgba(84,63,38,.14);
+            box-shadow:0 26px 48px rgba(24,74,108,.14);
         }
-        .featured-card:nth-child(-n+2){
-            grid-column:span 3;
+        .featured-card.is-primary{
+            grid-column:span 6;
             min-height:320px;
         }
-        .featured-card:nth-child(n+3){
-            grid-column:span 2;
-            min-height:210px;
+        .featured-card.is-secondary-four{
+            grid-column:span 3;
+            min-height:190px;
+        }
+        .featured-card.is-secondary-three{
+            grid-column:span 4;
+            min-height:190px;
+        }
+        .featured-card.is-secondary-two{
+            grid-column:span 6;
+            min-height:190px;
+        }
+        .featured-card.is-secondary-one{
+            grid-column:span 12;
+            min-height:190px;
         }
         .featured-card > a,
         .featured-card > div{
@@ -117,7 +129,7 @@
         .featured-overlay{
             position:absolute;
             inset:0;
-            background:linear-gradient(180deg, rgba(47,36,25,.02), rgba(47,36,25,.22) 42%, rgba(47,36,25,.82));
+            background:linear-gradient(180deg, rgba(12,41,64,.04), rgba(12,41,64,.22) 42%, rgba(12,41,64,.8));
         }
         .featured-copy{
             position:relative;
@@ -126,9 +138,9 @@
         }
         .featured-copy .eyebrow{
             margin-bottom:12px;
-            background:rgba(255,248,238,.14);
-            border-color:rgba(255,255,255,.22);
-            color:#fff7ed;
+            background:rgba(232,245,253,.18);
+            border-color:rgba(255,255,255,.26);
+            color:#eef8ff;
         }
         .featured-copy h2,
         .featured-copy h3{
@@ -143,7 +155,7 @@
             display:inline-flex;
             align-items:center;
             gap:8px;
-            color:#f1e4d3;
+            color:#d9eef9;
             font-size:.95rem;
         }
         .post-grid{
@@ -155,7 +167,7 @@
             overflow:hidden;
             border:1px solid rgba(255,255,255,.5);
             border-radius:18px;
-            background:rgba(255,251,245,.86);
+            background:rgba(248,252,255,.9);
             box-shadow:var(--shadow);
             transition:transform .2s ease,border-color .2s ease;
         }
@@ -170,8 +182,8 @@
         .post-thumb{
             height:130px;
             background:
-                linear-gradient(180deg, rgba(47,36,25,.03), rgba(47,36,25,.16)),
-                linear-gradient(135deg,#d8bf93,#93ab72);
+                linear-gradient(180deg, rgba(12,41,64,.04), rgba(12,41,64,.16)),
+                linear-gradient(135deg,#d1ebf7,#7fc6e0);
             background-size:cover;
             background-position:center;
         }
@@ -179,6 +191,24 @@
             display:grid;
             gap:8px;
             padding:14px;
+        }
+        .post-tags{
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+        }
+        .post-tag{
+            display:inline-flex;
+            align-items:center;
+            min-height:28px;
+            padding:4px 10px;
+            border:1px solid rgba(44,127,184,.18);
+            border-radius:999px;
+            background:rgba(220,238,248,.72);
+            color:var(--brand-deep);
+            font:700 .74rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.04em;
+            text-transform:uppercase;
         }
         .post-body h3{
             margin:0;
@@ -196,7 +226,7 @@
             display:inline-flex;
             align-items:center;
             gap:8px;
-            color:#8b7763;
+            color:#6f8ea5;
             font-size:.84rem;
         }
         .pagination{
@@ -217,16 +247,16 @@
             padding:0 14px;
             border:1px solid var(--line);
             border-radius:999px;
-            background:rgba(255,255,255,.03);
-            color:#dbe7ed;
+            background:rgba(255,255,255,.42);
+            color:var(--brand-deep);
         }
         .page-link:hover{
             border-color:var(--line-strong);
-            background:rgba(255,255,255,.06);
+            background:rgba(255,255,255,.72);
         }
         .page-current{
             background:linear-gradient(135deg,var(--brand),#8be4ff);
-            color:#04141b;
+            color:#f8fcff;
             border-color:transparent;
             font-weight:700;
         }
@@ -236,8 +266,11 @@
             .post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
             .featured-head{grid-template-columns:1fr}
             .featured-card,
-            .featured-card:nth-child(-n+2),
-            .featured-card:nth-child(n+3){
+            .featured-card.is-primary,
+            .featured-card.is-secondary-four,
+            .featured-card.is-secondary-three,
+            .featured-card.is-secondary-two,
+            .featured-card.is-secondary-one{
                 grid-column:auto;
                 min-height:240px;
             }
@@ -281,7 +314,7 @@
         </div>
         <section class="featured-grid" aria-label="Destacados">
             {% for item in featured_services %}
-                <article class="featured-card"{% if item.banner_image_url|default:item.image_url %} style="background-image:linear-gradient(180deg, rgba(47,36,25,.04), rgba(47,36,25,.50) 58%, rgba(47,36,25,.86)), url('{{ item.banner_image_url|default:item.image_url }}');"{% endif %}>
+                <article class="featured-card {% if forloop.counter <= 2 %}is-primary{% else %}{% if featured_services|length == 6 %}is-secondary-four{% elif featured_services|length == 5 %}is-secondary-three{% elif featured_services|length == 4 %}is-secondary-two{% else %}is-secondary-one{% endif %}{% endif %}"{% if item.banner_image_url|default:item.image_url %} style="background-image:linear-gradient(180deg, rgba(12,41,64,.06), rgba(12,41,64,.48) 58%, rgba(12,41,64,.84)), url('{{ item.banner_image_url|default:item.image_url }}');"{% endif %}>
                     <div class="featured-overlay"></div>
                     {% if item.get_absolute_url %}
                         <a href="{{ item.get_absolute_url }}">
@@ -329,10 +362,17 @@
             {% for item in posts_page %}
                 <article class="post-card">
                     <a href="{{ item.get_absolute_url }}">
-                        <div class="post-thumb"{% if item.banner_image_url %} style="background-image:linear-gradient(180deg, rgba(47,36,25,.03), rgba(47,36,25,.16)), url('{{ item.banner_image_url }}');"{% endif %}></div>
+                        <div class="post-thumb"{% if item.banner_image_url %} style="background-image:linear-gradient(180deg, rgba(12,41,64,.04), rgba(12,41,64,.16)), url('{{ item.banner_image_url }}');"{% endif %}></div>
                         <div class="post-body">
                             <h3>{{ item.title }}</h3>
                             <p>{{ item.excerpt }}</p>
+                            {% if item.tags.all %}
+                                <div class="post-tags" aria-label="Etiquetas">
+                                    {% for tag in item.tags.all %}
+                                        <span class="post-tag">{{ tag.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                             <div class="post-meta">
                                 <svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>
                                 <span>{{ item.published_at|date:"j \\d\\e F, Y" }}</span>

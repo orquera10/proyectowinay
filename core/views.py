@@ -130,7 +130,11 @@ def home(request):
     search_query = request.GET.get('q', '').strip()
     if search_query:
         posts = posts.filter(title__icontains=search_query)
-    featured_posts = list(posts.filter(is_featured=True)[:5])
+    featured_posts = list(posts.filter(is_featured=True)[:6])
+    if len(featured_posts) < 6:
+        featured_ids = {post.pk for post in featured_posts}
+        supplemental_posts = posts.exclude(pk__in=featured_ids)[: 6 - len(featured_posts)]
+        featured_posts.extend(supplemental_posts)
     recent_posts = list(posts[:6])
     posts_paginator = Paginator(posts, 6)
     posts_page = posts_paginator.get_page(request.GET.get('page'))

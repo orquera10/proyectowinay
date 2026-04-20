@@ -6,6 +6,30 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=60, unique=True)
+    slug = models.SlugField(max_length=80, unique=True, blank=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'etiqueta'
+        verbose_name_plural = 'etiquetas'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)[:70] or 'etiqueta'
+            slug = base_slug
+            counter = 2
+            while Tag.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f'{base_slug[:65]}-{counter}'
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+
 class Post(models.Model):
     class Tone(models.TextChoices):
         PRIMARY = 'primary', 'Primary'
@@ -19,6 +43,7 @@ class Post(models.Model):
     banner_image = models.ImageField(upload_to='posts/banners/', blank=True)
     body_image = models.ImageField(upload_to='posts/body/', blank=True)
     eyebrow = models.CharField(max_length=80, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     tone = models.CharField(
         max_length=20,
         choices=Tone.choices,
@@ -127,3 +152,19 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('core:post_detail', kwargs={'slug': self.slug})
+
+
+class PostGalleryImage(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.ImageField(upload_to='posts/gallery/')
+    caption = models.CharField(max_length=140, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['sort_order', 'id']
+        verbose_name = 'imagen de galeria'
+        verbose_name_plural = 'imagenes de galeria'
+
+    def __str__(self):
+        return self.caption or f'Imagen de {self.post.title}'
