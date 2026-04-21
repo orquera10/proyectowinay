@@ -1,8 +1,14 @@
+import os
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.core.mail import send_mail
 from django.conf import settings
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
+from .forms import ContactForm
 from .models import Post
 
 
@@ -106,7 +112,7 @@ INFO_PAGES = {
 }
 
 
-def get_shared_context(current_page):
+def get_shared_context(current_page, contact_form=None):
     ticker_items = list(
         Post.objects.filter(
             is_published=True,
@@ -119,10 +125,27 @@ def get_shared_context(current_page):
         'brand_banner_url': f"{settings.STATIC_URL}winayBanner.png",
         'favicon_url': f"{settings.STATIC_URL}winayLogo.png",
         'ticker_items': ticker_items or TICKER_FALLBACK,
+        'social_links': [
+            {
+                'name': 'Instagram',
+                'url': os.getenv('INSTAGRAM_URL', 'https://www.instagram.com/fundacionwinay'),
+                'handle': os.getenv('INSTAGRAM_HANDLE', '@fundacionwinay'),
+                'cta': 'Seguinos en Instagram',
+            },
+            {
+                'name': 'Facebook',
+                'url': os.getenv('FACEBOOK_URL', 'https://www.facebook.com/tupagina'),
+                'handle': os.getenv('FACEBOOK_HANDLE', 'Fundacion Winay'),
+                'cta': 'Seguinos en Facebook',
+            },
+        ],
+        'contact_email': os.getenv('CONTACT_EMAIL', 'contacto@winay.local'),
+        'contact_phone': os.getenv('CONTACT_PHONE', '+54 000 000 0000'),
+        'contact_form': contact_form or ContactForm(),
     }
 
 
-def home(request):
+def build_home_context(request, contact_form=None):
     posts = Post.objects.filter(
         is_published=True,
         published_at__lte=timezone.now(),
@@ -205,8 +228,61 @@ def home(request):
         'posts_page': posts_page,
         'search_query': search_query,
     }
-    context.update(get_shared_context('home'))
-    return render(request, 'core/home.html', context)
+    context.update(get_shared_context('home', contact_form=contact_form))
+    return context
+
+
+def home(request):
+    return render(request, 'core/home.html', build_home_context(request))
+
+
+def contact_submit(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    form = ContactForm(request.POST)
+    redirect_to = request.POST.get('next') or reverse('core:home')
+
+    if not form.is_valid():
+        messages.error(request, 'Revisa el formulario de contacto y completa los campos requeridos.')
+        if redirect_to == reverse('core:home'):
+            return render(request, 'core/home.html', build_home_context(request, contact_form=form))
+        return redirect(redirect_to)
+
+    contact_email = os.getenv('CONTACT_EMAIL', 'contacto@winay.local')
+    sender_email = form.cleaned_data['email']
+    phone = form.cleaned_data['phone'].strip()
+    message_lines = [
+        f"Nombre: {form.cleaned_data['name']}",
+        f"Email: {sender_email}",
+    ]
+    if phone:
+        message_lines.append(f"Telefono: {phone}")
+    message_lines.extend(
+        [
+            '',
+            'Mensaje:',
+            form.cleaned_data['message'],
+        ]
+    )
+
+    try:
+        send_mail(
+            subject=f"[Web Winay] {form.cleaned_data['subject']}",
+            message='\n'.join(message_lines),
+            from_email=os.getenv('DEFAULT_FROM_EMAIL', contact_email),
+            recipient_list=[contact_email],
+            fail_silently=False,
+        )
+    except Exception:
+        messages.warning(
+            request,
+            'Recibimos tu mensaje, pero el envio automatico no esta configurado todavia. Usa el email de contacto mientras terminamos esa integracion.',
+        )
+    else:
+        messages.success(request, 'Tu mensaje fue enviado correctamente. Gracias por escribirnos.')
+
+    return redirect(redirect_to)
 
 
 def post_detail(request, slug):
