@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,17 +15,37 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-!iz7c_2ed7t)52f3w@wsyv%@s4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() in {'1', 'true', 'yes', 'on'}
 
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.getenv('ALLOWED_HOSTS', '*').split(',')
-    if host.strip()
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
-    if origin.strip()
-]
+def get_csv_env(name, default=''):
+    return [
+        value.strip()
+        for value in os.getenv(name, default).split(',')
+        if value.strip()
+    ]
+
+
+ALLOWED_HOSTS = get_csv_env('ALLOWED_HOSTS', '127.0.0.1,localhost')
+
+raw_trusted_origins = set(get_csv_env('CSRF_TRUSTED_ORIGINS'))
+
+for url_setting in ('APP_URL', 'SITE_URL'):
+    parsed = urlparse(os.getenv(url_setting, '').strip())
+    if parsed.scheme and parsed.netloc:
+        raw_trusted_origins.add(f'{parsed.scheme}://{parsed.netloc}')
+
+for host in ALLOWED_HOSTS:
+    if host == '*':
+        continue
+    normalized_host = host.lstrip('.')
+    if normalized_host.startswith('*.'):
+        raw_trusted_origins.add(f'https://{normalized_host}')
+        continue
+    raw_trusted_origins.add(f'https://{normalized_host}')
+    if normalized_host in {'127.0.0.1', 'localhost'}:
+        raw_trusted_origins.add(f'http://{normalized_host}')
+
+CSRF_TRUSTED_ORIGINS = sorted(raw_trusted_origins)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
