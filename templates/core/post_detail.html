@@ -105,8 +105,15 @@
         }
         .gallery{
             display:grid;
-            gap:16px;
-            margin:0 0 24px;
+            gap:18px;
+            margin:10px 0 24px;
+            padding:24px;
+            border:1px solid rgba(255,255,255,.62);
+            border-radius:28px;
+            background:
+                radial-gradient(circle at top right, rgba(217,243,251,.56), transparent 30%),
+                linear-gradient(180deg, rgba(255,255,255,.9), rgba(240,248,253,.92));
+            box-shadow:var(--shadow);
         }
         .gallery-head{
             display:flex;
@@ -120,43 +127,88 @@
             color:var(--muted);
             line-height:1.7;
         }
+        .gallery-status{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            min-height:38px;
+            padding:0 14px;
+            border:1px solid rgba(44,127,184,.16);
+            border-radius:999px;
+            background:rgba(255,255,255,.72);
+            color:var(--brand-deep);
+            font:700 .78rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+            white-space:nowrap;
+        }
         .gallery-carousel{
             display:grid;
-            gap:12px;
+            gap:14px;
         }
         .gallery-stage{
             position:relative;
-            width:min(72%, 760px);
-            margin:0 auto;
+            width:min(100%, 860px);
+            margin:0;
             overflow:hidden;
             border:1px solid rgba(41,90,124,.12);
-            border-radius:20px;
-            background:rgba(255,255,255,.42);
+            border-radius:24px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.88), rgba(235,246,252,.94));
+            box-shadow:0 18px 42px rgba(24,74,108,.08);
         }
         .gallery-slide{
             display:none;
         }
         .gallery-slide.is-active{
-            display:block;
+            display:grid;
+        }
+        .gallery-figure{
+            display:grid;
+            gap:0;
+        }
+        .gallery-media{
+            position:relative;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            min-height:420px;
+            padding:28px;
+            background:
+                radial-gradient(circle at top right, rgba(217,243,251,.5), transparent 32%),
+                linear-gradient(180deg, rgba(244,250,254,.96), rgba(225,239,248,.94));
         }
         .gallery-slide img{
             display:block;
-            width:100%;
+            max-width:100%;
+            max-height:460px;
+            width:auto;
             height:auto;
             object-fit:contain;
+            border-radius:18px;
+            box-shadow:0 16px 34px rgba(24,74,108,.12);
         }
         .gallery-slide figcaption{
-            padding:10px 12px 12px;
+            display:grid;
+            gap:6px;
+            padding:16px 18px 18px;
+            border-top:1px solid rgba(41,90,124,.1);
+            background:rgba(255,255,255,.76);
             color:var(--muted);
             font-size:.88rem;
-            line-height:1.55;
+            line-height:1.6;
+        }
+        .gallery-caption-label{
+            color:var(--brand-deep);
+            font:700 .72rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.08em;
+            text-transform:uppercase;
         }
         .gallery-nav{
             position:absolute;
-            inset:50% 10px auto;
+            inset:calc(50% - 34px) 14px auto;
             display:flex;
             justify-content:space-between;
-            transform:translateY(-50%);
             pointer-events:none;
         }
         .gallery-button{
@@ -164,48 +216,55 @@
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            width:36px;
-            height:36px;
-            border:1px solid rgba(255,255,255,.18);
+            width:44px;
+            height:44px;
+            border:1px solid rgba(255,255,255,.38);
             border-radius:999px;
-            background:rgba(12,41,64,.32);
+            background:rgba(12,41,64,.52);
             color:#f3fbff;
             cursor:pointer;
-            transition:transform .2s ease, background .2s ease;
+            box-shadow:0 14px 30px rgba(12,41,64,.18);
+            transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
         }
         .gallery-button:hover{
-            transform:scale(1.03);
-            background:rgba(12,41,64,.46);
+            transform:scale(1.04);
+            background:rgba(12,41,64,.66);
+            box-shadow:0 18px 34px rgba(12,41,64,.24);
         }
         .gallery-thumbs{
             display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(40px,56px));
-            justify-content:center;
-            gap:6px;
+            grid-template-columns:repeat(auto-fit,minmax(64px,1fr));
+            gap:10px;
         }
         .gallery-thumb{
             padding:0;
-            border:1px solid transparent;
-            border-radius:14px;
+            border:1px solid rgba(41,90,124,.08);
+            border-radius:16px;
             overflow:hidden;
-            background:rgba(255,255,255,.4);
+            background:rgba(255,255,255,.7);
             cursor:pointer;
-            opacity:.72;
-            transition:opacity .2s ease, border-color .2s ease, transform .2s ease;
+            opacity:.82;
+            transition:opacity .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
         }
         .gallery-thumb img{
             display:block;
             width:100%;
-            height:40px;
+            height:62px;
             object-fit:cover;
         }
         .gallery-thumb.is-active{
             border-color:rgba(44,127,184,.34);
+            box-shadow:0 10px 24px rgba(44,127,184,.16);
             opacity:1;
         }
         .gallery-thumb:hover{
-            opacity:.92;
-            transform:translateY(-1px);
+            opacity:.96;
+            transform:translateY(-2px);
+        }
+        .gallery-thumb:focus-visible,
+        .gallery-button:focus-visible{
+            outline:none;
+            box-shadow:0 0 0 4px rgba(44,127,184,.14), 0 16px 30px rgba(24,74,108,.14);
         }
         .body h3{
             margin:10px 0 0;
@@ -231,18 +290,63 @@
         }
         .sidebar{display:grid;gap:20px}
         .recent-list{display:grid;gap:14px}
+        .recent-empty{
+            display:block;
+            padding:18px;
+            border:1px dashed rgba(41,90,124,.16);
+            border-radius:20px;
+            background:rgba(255,255,255,.4);
+            color:var(--muted);
+        }
         .recent-item{
             display:grid;
-            grid-template-rows:auto 1fr;
-            align-content:start;
-            min-height:152px;
-            padding:18px;
-            background:rgba(255,255,255,.46);
-            transition:transform .2s ease,border-color .2s ease;
+            grid-template-rows:auto 1fr auto;
+            gap:14px;
+            min-height:208px;
+            padding:20px;
+            border:1px solid rgba(41,90,124,.1);
+            border-radius:22px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.96), rgba(239,248,253,.92));
+            transition:transform .2s ease,border-color .2s ease, box-shadow .2s ease, background .2s ease;
         }
-        .recent-item:hover{transform:translateY(-2px);border-color:var(--line-strong)}
-        .recent-item strong{display:block;margin-bottom:8px;color:var(--ink)}
-        .recent-item span{
+        .recent-item:hover{
+            transform:translateY(-3px);
+            border-color:rgba(44,127,184,.22);
+            box-shadow:0 18px 34px rgba(24,74,108,.10);
+            background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(234,245,251,.96));
+        }
+        .recent-item-head{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+        .recent-item-kicker{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            color:var(--brand-deep);
+            font:700 .72rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+        .recent-item-kicker .icon-chip{
+            width:30px;
+            height:30px;
+            border-radius:10px;
+            flex:0 0 auto;
+        }
+        .recent-item strong{
+            display:-webkit-box;
+            margin:0;
+            color:var(--ink);
+            font-size:1.02rem;
+            line-height:1.28;
+            -webkit-line-clamp:2;
+            -webkit-box-orient:vertical;
+            overflow:hidden;
+        }
+        .recent-item-excerpt{
             color:var(--muted);
             line-height:1.65;
             display:-webkit-box;
@@ -250,11 +354,63 @@
             -webkit-box-orient:vertical;
             overflow:hidden;
         }
+        .recent-item-meta{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            padding-top:12px;
+            border-top:1px solid rgba(41,90,124,.1);
+            color:#6f8ea5;
+            font-size:.84rem;
+        }
+        .recent-item-date,
+        .recent-item-link{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+        }
+        .recent-item-link{
+            color:var(--brand-deep);
+            font:700 .78rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.05em;
+            text-transform:uppercase;
+        }
         @media (max-width:900px){
             .layout{grid-template-columns:1fr}
             .hero{padding:28px}
             .body-media{width:min(100%, 780px)}
+            .gallery{padding:20px}
+            .gallery-media{min-height:320px;padding:20px}
             .gallery-stage{width:min(100%, 760px)}
+        }
+        @media (max-width:640px){
+            .gallery-head{
+                align-items:flex-start;
+            }
+            .gallery-status{
+                min-height:34px;
+                padding:0 12px;
+                font-size:.72rem;
+            }
+            .gallery-media{
+                min-height:260px;
+                padding:16px;
+            }
+            .gallery-slide img{
+                max-height:320px;
+            }
+            .gallery-nav{
+                inset:auto 14px 14px auto;
+                justify-content:flex-end;
+                gap:10px;
+            }
+            .gallery-thumbs{
+                grid-template-columns:repeat(auto-fit,minmax(56px,1fr));
+            }
+            .gallery-thumb img{
+                height:54px;
+            }
         }
 {% endblock %}
 
@@ -305,17 +461,28 @@
                         <div class="gallery-head">
                             <div>
                                 <h3>Galeria</h3>
-                                <p>Registro fotografico vinculado a esta publicacion.</p>
+                                <p>Un recorrido en imagenes por los momentos compartidos en esta experiencia.</p>
+                            </div>
+                            <div class="gallery-status" aria-live="polite" data-gallery-status>
+                                <svg class="icon icon-sm"><use href="#icon-folder"></use></svg>
+                                <span>1 / {{ post.gallery_images.count }}</span>
                             </div>
                         </div>
                         <div class="gallery-carousel">
                             <div class="gallery-stage">
                                 {% for image in post.gallery_images.all %}
                                     <figure class="gallery-slide{% if forloop.first %} is-active{% endif %}" data-gallery-slide>
-                                        <img src="{{ image.image.url }}" alt="{{ image.caption|default:post.title }}">
+                                        <div class="gallery-figure">
+                                            <div class="gallery-media">
+                                                <img src="{{ image.image.url }}" alt="{{ image.caption|default:post.title }}">
+                                            </div>
                                         {% if image.caption %}
-                                            <figcaption>{{ image.caption }}</figcaption>
+                                                <figcaption>
+                                                    <span class="gallery-caption-label">Detalle visual</span>
+                                                    <span>{{ image.caption }}</span>
+                                                </figcaption>
                                         {% endif %}
+                                        </div>
                                     </figure>
                                 {% endfor %}
                                 {% if post.gallery_images.count > 1 %}
@@ -348,11 +515,21 @@
                     <div class="recent-list">
                         {% for item in recent_posts %}
                             <a class="recent-item" href="{{ item.get_absolute_url }}">
+                                <div class="recent-item-head">
+                                    <span class="recent-item-kicker">
+                                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg></span>
+                                        Entrada relacionada
+                                    </span>
+                                </div>
                                 <strong>{{ item.title }}</strong>
-                                <span>{{ item.excerpt }}</span>
+                                <span class="recent-item-excerpt">{{ item.excerpt }}</span>
+                                <div class="recent-item-meta">
+                                    <span class="recent-item-date"><svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>{{ item.published_at|date:"j \\d\\e F" }}</span>
+                                    <span class="recent-item-link">Leer mas <svg class="icon icon-sm"><use href="#icon-arrow-right"></use></svg></span>
+                                </div>
                             </a>
                         {% empty %}
-                            <span>No hay otras entradas publicadas todavia.</span>
+                            <span class="recent-empty">No hay otras entradas publicadas todavia.</span>
                         {% endfor %}
                     </div>
                 </section>
@@ -369,6 +546,7 @@
                 var thumbs = Array.from(gallery.querySelectorAll('[data-gallery-thumb]'));
                 var prev = gallery.querySelector('[data-gallery-prev]');
                 var next = gallery.querySelector('[data-gallery-next]');
+                var status = gallery.querySelector('[data-gallery-status] span');
                 if (slides.length < 2) return;
 
                 var index = 0;
@@ -381,6 +559,9 @@
                     thumbs.forEach(function (thumb, thumbIndex) {
                         thumb.classList.toggle('is-active', thumbIndex === index);
                     });
+                    if (status) {
+                        status.textContent = (index + 1) + ' / ' + slides.length;
+                    }
                 }
 
                 if (prev) {
