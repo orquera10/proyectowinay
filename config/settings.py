@@ -24,7 +24,7 @@ def get_csv_env(name, default=''):
     ]
 
 
-ALLOWED_HOSTS = get_csv_env('ALLOWED_HOSTS', '127.0.0.1,localhost')
+ALLOWED_HOSTS = get_csv_env('ALLOWED_HOSTS', '*,127.0.0.1,localhost')
 
 raw_trusted_origins = set(get_csv_env('CSRF_TRUSTED_ORIGINS'))
 
