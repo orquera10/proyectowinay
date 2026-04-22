@@ -76,11 +76,13 @@
         h1,h2,h3,p{margin-top:0}
         .hero h1{
             font-size:clamp(1.45rem,2.6vw,2.45rem);
-            max-width:16ch;
+            max-width:30ch;
             line-height:1.04;
             text-wrap:balance;
+            color:#f4fbff;
+            text-shadow:0 6px 20px rgba(12,41,64,.38);
         }
-        .excerpt,.body,.recent-item span{color:#e8f6ff;line-height:1.8}
+        .excerpt,.body{color:#e8f6ff;line-height:1.8}
         .meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;color:#d6edf9}
         .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:28px;padding:28px 0 42px}
         .article,.sidebar-card{padding:28px}
@@ -230,13 +232,24 @@
         .sidebar{display:grid;gap:20px}
         .recent-list{display:grid;gap:14px}
         .recent-item{
-            display:block;
+            display:grid;
+            grid-template-rows:auto 1fr;
+            align-content:start;
+            min-height:152px;
             padding:18px;
             background:rgba(255,255,255,.46);
             transition:transform .2s ease,border-color .2s ease;
         }
         .recent-item:hover{transform:translateY(-2px);border-color:var(--line-strong)}
         .recent-item strong{display:block;margin-bottom:8px;color:var(--ink)}
+        .recent-item span{
+            color:var(--muted);
+            line-height:1.65;
+            display:-webkit-box;
+            -webkit-line-clamp:4;
+            -webkit-box-orient:vertical;
+            overflow:hidden;
+        }
         @media (max-width:900px){
             .layout{grid-template-columns:1fr}
             .hero{padding:28px}
