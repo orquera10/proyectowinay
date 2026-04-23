@@ -388,17 +388,17 @@
         {% if posts_page.paginator.num_pages > 1 %}
             <nav class="pagination" aria-label="Paginacion de entradas">
                 {% if posts_page.has_previous %}
-                    <a class="page-link" href="?page={{ posts_page.previous_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">Anterior</a>
+                    <a class="page-link" href="?page={{ posts_page.previous_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}#novedades">Anterior</a>
                 {% endif %}
                 {% for number in posts_page.paginator.page_range %}
                     {% if number == posts_page.number %}
                         <span class="page-current">{{ number }}</span>
                     {% else %}
-                        <a class="page-link" href="?page={{ number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">{{ number }}</a>
+                        <a class="page-link" href="?page={{ number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}#novedades">{{ number }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if posts_page.has_next %}
-                    <a class="page-link" href="?page={{ posts_page.next_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">Siguiente</a>
+                    <a class="page-link" href="?page={{ posts_page.next_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}#novedades">Siguiente</a>
                 {% endif %}
             </nav>
         {% endif %}
