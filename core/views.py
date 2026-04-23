@@ -1,11 +1,12 @@
 import os
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.html import escape
 from django.utils import timezone
 
 from .forms import ContactForm
@@ -250,30 +251,71 @@ def contact_submit(request):
         return redirect(redirect_to)
 
     contact_email = os.getenv('CONTACT_EMAIL', 'contacto@winay.local')
+    name = form.cleaned_data['name']
     sender_email = form.cleaned_data['email']
     phone = form.cleaned_data['phone'].strip()
-    message_lines = [
-        f"Nombre: {form.cleaned_data['name']}",
-        f"Email: {sender_email}",
-    ]
-    if phone:
-        message_lines.append(f"Telefono: {phone}")
-    message_lines.extend(
+    phone_display = phone or 'No indicado'
+    subject = form.cleaned_data['subject']
+    message = form.cleaned_data['message']
+    plain_message = '\n'.join(
         [
+            'Nuevo mensaje recibido desde la web de Fundacion Winay',
+            '',
+            f'Nombre: {name}',
+            f'Email: {sender_email}',
+            f'Telefono: {phone_display}',
+            f'Asunto: {subject}',
             '',
             'Mensaje:',
-            form.cleaned_data['message'],
+            message,
         ]
     )
+    html_message = f"""
+    <div style="font-family:Arial,sans-serif;color:#163247;line-height:1.6">
+        <div style="max-width:620px;border:1px solid #dceef8;border-radius:18px;overflow:hidden">
+            <div style="background:#2c7fb8;color:#ffffff;padding:18px 22px">
+                <h2 style="margin:0;font-size:20px">Nuevo mensaje desde la web</h2>
+                <p style="margin:6px 0 0;color:#e8f6ff">Fundacion Winay</p>
+            </div>
+            <div style="padding:22px;background:#f8fcff">
+                <p style="margin:0 0 16px">Una persona completo el formulario de contacto.</p>
+                <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+                    <tr>
+                        <td style="padding:8px 0;color:#587186;width:110px">Nombre</td>
+                        <td style="padding:8px 0;font-weight:bold">{escape(name)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#587186">Email</td>
+                        <td style="padding:8px 0"><a href="mailto:{escape(sender_email)}">{escape(sender_email)}</a></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#587186">Telefono</td>
+                        <td style="padding:8px 0">{escape(phone_display)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#587186">Asunto</td>
+                        <td style="padding:8px 0">{escape(subject)}</td>
+                    </tr>
+                </table>
+                <div style="border-top:1px solid #dceef8;padding-top:16px">
+                    <strong style="display:block;margin-bottom:8px">Mensaje</strong>
+                    <div style="white-space:pre-wrap;background:#ffffff;border:1px solid #dceef8;border-radius:14px;padding:14px">{escape(message)}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    """
 
     try:
-        send_mail(
-            subject=f"[Web Winay] {form.cleaned_data['subject']}",
-            message='\n'.join(message_lines),
+        email = EmailMultiAlternatives(
+            subject=f'[Web Winay] {subject}',
+            body=plain_message,
             from_email=os.getenv('DEFAULT_FROM_EMAIL', contact_email),
-            recipient_list=[contact_email],
-            fail_silently=False,
+            to=[contact_email],
+            reply_to=[sender_email],
         )
+        email.attach_alternative(html_message, 'text/html')
+        email.send(fail_silently=False)
     except Exception:
         messages.warning(
             request,
