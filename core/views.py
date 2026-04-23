@@ -159,7 +159,7 @@ def build_home_context(request, contact_form=None):
         supplemental_posts = posts.exclude(pk__in=featured_ids)[: 6 - len(featured_posts)]
         featured_posts.extend(supplemental_posts)
     recent_posts = list(posts[:6])
-    posts_paginator = Paginator(posts, 6)
+    posts_paginator = Paginator(posts, 8)
     posts_page = posts_paginator.get_page(request.GET.get('page'))
 
     fallback_services = [
