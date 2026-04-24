@@ -423,6 +423,28 @@
             border-color:var(--line-strong);
             background:rgba(255,255,255,.82);
         }
+        .social-card .icon-chip{
+            transition:background .2s ease,color .2s ease,box-shadow .2s ease;
+        }
+        .social-card.is-instagram .icon-chip{
+            background:linear-gradient(135deg,#f58529,#dd2a7b 48%,#8134af);
+            color:#fff;
+            box-shadow:0 10px 22px rgba(221,42,123,.22);
+        }
+        .social-card.is-facebook .icon-chip{
+            background:#1877f2;
+            color:#fff;
+            box-shadow:0 10px 22px rgba(24,119,242,.22);
+        }
+        .social-card:hover .icon-chip{
+            box-shadow:0 14px 28px rgba(24,74,108,.16);
+        }
+        .social-card.is-instagram:hover .icon-chip{
+            box-shadow:0 14px 28px rgba(221,42,123,.3);
+        }
+        .social-card.is-facebook:hover .icon-chip{
+            box-shadow:0 14px 28px rgba(24,119,242,.3);
+        }
         .social-card-main{
             display:flex;
             align-items:center;
@@ -774,7 +796,7 @@
             </div>
             <div class="social-actions">
                 {% for link in social_links %}
-                    <a class="social-card" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.cta }}">
+                    <a class="social-card {% if 'Instagram' in link.name %}is-instagram{% elif 'Facebook' in link.name %}is-facebook{% endif %}" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.cta }}">
                         <span class="social-card-main">
                             <span class="icon-chip">
                                 <svg class="icon icon-sm">
