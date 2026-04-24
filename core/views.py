@@ -124,6 +124,7 @@ def get_shared_context(current_page, contact_form=None):
         'nav_pages': NAV_PAGES,
         'current_page': current_page,
         'brand_banner_url': f"{settings.STATIC_URL}winayBanner.png",
+        'brand_banner_mobile_url': f"{settings.STATIC_URL}logoCel.png",
         'favicon_url': f"{settings.STATIC_URL}winayLogo.png",
         'ticker_items': ticker_items or TICKER_FALLBACK,
         'social_links': [
