@@ -650,6 +650,42 @@
             }
             .nav.is-open .nav-inner{display:flex}
             .nav a{width:100%}
+            .ticker{
+                display:grid;
+                grid-template-columns:30px minmax(0,1fr);
+                align-items:center;
+                flex-wrap:nowrap;
+                height:56px;
+                min-height:56px;
+                padding:0 14px;
+                overflow:hidden;
+            }
+            .ticker strong{
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                width:30px;
+                height:30px;
+                margin:0;
+                padding:0;
+                line-height:1;
+            }
+            .ticker strong .icon{
+                display:block;
+                width:18px;
+                height:18px;
+            }
+            .ticker-rotator{
+                min-width:0;
+                align-items:center;
+                overflow:hidden;
+            }
+            .ticker-item{
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                line-height:1.25;
+            }
             .page-hero{padding:28px 22px}
             .page-grid{gap:16px;padding:20px 0 32px}
             .social-band,
@@ -665,7 +701,6 @@
                 align-self:flex-start;
             }
             .contact-form-fields{grid-template-columns:1fr}
-            .ticker-item{white-space:normal}
         }
         {% block extra_css %}{% endblock %}
     </style>
@@ -766,7 +801,7 @@
     </nav>
     {% block ticker %}
         <div class="shell ticker" data-ticker>
-            <strong><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>Novedades</strong>
+            <strong aria-label="Novedades"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg></strong>
             <div class="ticker-rotator">
                 {% for item in ticker_items %}
                     <span class="ticker-item{% if forloop.first %} is-active{% endif %}">
