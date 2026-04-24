@@ -54,6 +54,7 @@
         a{color:inherit;text-decoration:none}
         .shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
         .top{
+            display:block;
             position:relative;
             margin:20px auto 0;
             min-height:290px;
@@ -259,6 +260,21 @@
             transition:transform .2s ease, box-shadow .25s ease;
         }
         .btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(44,127,184,.22)}
+        .btn:disabled,
+        .btn.is-loading{
+            cursor:wait;
+            opacity:.78;
+            transform:none;
+            box-shadow:none;
+        }
+        .button-spinner{
+            width:1rem;
+            height:1rem;
+            border:2px solid rgba(255,255,255,.42);
+            border-top-color:#fff;
+            border-radius:999px;
+            animation:spin .75s linear infinite;
+        }
         .page-hero{
             position:relative;
             overflow:hidden;
@@ -292,6 +308,33 @@
             border-color:var(--line-strong);
             background:rgba(251,254,255,.96);
         }
+        .flash-stack{
+            width:min(1180px,calc(100% - 32px));
+            margin:18px auto 0;
+            display:grid;
+            gap:10px;
+        }
+        .flash{
+            padding:14px 16px;
+            border:1px solid var(--line);
+            border-radius:18px;
+            background:rgba(248,252,255,.92);
+            color:var(--ink);
+            box-shadow:0 12px 28px rgba(24,74,108,.06);
+        }
+        .flash.success{
+            border-color:rgba(64,151,111,.28);
+            background:rgba(238,251,245,.94);
+        }
+        .flash.error{
+            border-color:rgba(190,87,87,.24);
+            background:rgba(255,244,244,.94);
+        }
+        .flash.warning{
+            border-color:rgba(191,145,62,.24);
+            background:rgba(255,249,238,.94);
+        }
+        .social-band,
         .contact-band{
             width:min(1180px,calc(100% - 32px));
             margin:22px auto 0;
@@ -302,29 +345,67 @@
                 linear-gradient(135deg, rgba(251,254,255,.98), rgba(232,242,249,.96));
             box-shadow:var(--shadow);
         }
-        .contact-grid{
+        .social-band,
+        .contact-band{
+            position:relative;
+            overflow:hidden;
+        }
+        .social-band::after,
+        .contact-band::after{
+            content:"";
+            position:absolute;
+            inset:auto -55px -55px auto;
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(44,127,184,.16), transparent 70%);
+            pointer-events:none;
+        }
+        .social-grid{
+            position:relative;
+            z-index:1;
             display:grid;
-            grid-template-columns:minmax(0,1fr) minmax(320px,.85fr);
+            grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
             gap:28px;
             align-items:start;
         }
+        .contact-grid{
+            position:relative;
+            z-index:1;
+            display:grid;
+            grid-template-columns:minmax(280px,.82fr) minmax(0,1.18fr);
+            gap:28px;
+            align-items:start;
+        }
+        .social-copy,
+        .social-actions,
         .contact-panel,
-        .social-panel{
+        .contact-form-wrap{
             display:grid;
             gap:14px;
         }
+        .social-band h2,
         .contact-band h2{
             margin:0;
             font-size:clamp(1.3rem,2vw,1.75rem);
         }
+        .social-band p,
         .contact-band p{
             margin:0;
             color:var(--muted);
             line-height:1.75;
         }
-        .contact-actions,.social-grid{display:grid;gap:10px}
+        .social-actions,
+        .contact-actions,
+        .contact-form{
+            display:grid;
+            gap:10px;
+        }
+        .social-card,
         .contact-pill,
-        .social-card{
+        .contact-form-card{
+            position:relative;
+            z-index:1;
             display:flex;
             align-items:center;
             gap:14px;
@@ -333,6 +414,60 @@
             border-radius:18px;
             background:rgba(255,255,255,.56);
         }
+        .social-card{
+            justify-content:space-between;
+            transition:transform .2s ease,border-color .2s ease,background .2s ease;
+        }
+        .social-card:hover{
+            transform:translateY(-2px);
+            border-color:var(--line-strong);
+            background:rgba(255,255,255,.82);
+        }
+        .social-card .icon-chip{
+            transition:background .2s ease,color .2s ease,box-shadow .2s ease;
+        }
+        .social-card.is-instagram .icon-chip{
+            background:linear-gradient(135deg,#f58529,#dd2a7b 48%,#8134af);
+            color:#fff;
+            box-shadow:0 10px 22px rgba(221,42,123,.22);
+        }
+        .social-card.is-facebook .icon-chip{
+            background:#1877f2;
+            color:#fff;
+            box-shadow:0 10px 22px rgba(24,119,242,.22);
+        }
+        .social-card:hover .icon-chip{
+            box-shadow:0 14px 28px rgba(24,74,108,.16);
+        }
+        .social-card.is-instagram:hover .icon-chip{
+            box-shadow:0 14px 28px rgba(221,42,123,.3);
+        }
+        .social-card.is-facebook:hover .icon-chip{
+            box-shadow:0 14px 28px rgba(24,119,242,.3);
+        }
+        .social-card-main{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+        .social-card-copy{
+            min-width:0;
+        }
+        .social-card-cta{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            min-height:38px;
+            padding:0 14px;
+            border:1px solid transparent;
+            border-radius:999px;
+            background:linear-gradient(135deg,var(--brand),#59b7d8);
+            color:#f4fbff;
+            font:700 .8rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+            white-space:nowrap;
+        }
         .contact-pill strong,
         .social-card strong{
             display:block;
@@ -340,11 +475,69 @@
             color:var(--ink);
             font-size:.95rem;
         }
-        .contact-pill span,
-        .social-card span{
+        .contact-pill div span,
+        .social-card-copy span{
             color:var(--muted);
             font-size:.92rem;
             line-height:1.5;
+        }
+        .contact-form-card{
+            display:grid;
+            gap:14px;
+            padding:20px;
+        }
+        .contact-form-fields{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:12px;
+        }
+        .form-field{
+            display:grid;
+            gap:6px;
+        }
+        .form-field.is-full{
+            grid-column:1 / -1;
+        }
+        .form-field label{
+            color:var(--brand-deep);
+            font:700 .82rem "Candara","Segoe UI Variable Display",sans-serif;
+            letter-spacing:.05em;
+            text-transform:uppercase;
+        }
+        .form-field input,
+        .form-field textarea{
+            width:100%;
+            border:1px solid var(--line);
+            border-radius:16px;
+            background:rgba(255,255,255,.82);
+            color:var(--ink);
+            padding:12px 14px;
+            font:500 .95rem "Segoe UI Variable Text","Candara","Trebuchet MS",sans-serif;
+            transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .form-field textarea{
+            resize:vertical;
+            min-height:140px;
+        }
+        .form-field input:focus,
+        .form-field textarea:focus{
+            outline:none;
+            border-color:rgba(44,127,184,.44);
+            box-shadow:0 0 0 4px rgba(44,127,184,.10);
+            background:#fff;
+        }
+        .form-errors{
+            margin:0;
+            padding:10px 12px;
+            border:1px solid rgba(190,87,87,.22);
+            border-radius:14px;
+            background:rgba(255,244,244,.94);
+            color:#8b4242;
+            list-style:none;
+        }
+        .contact-submit{
+            justify-self:start;
+            margin-top:2px;
         }
         .site-footer{
             width:min(1180px,calc(100% - 32px));
@@ -401,27 +594,44 @@
             from{opacity:0;transform:translateY(18px)}
             to{opacity:1;transform:translateY(0)}
         }
+        @keyframes spin{
+            to{transform:rotate(360deg)}
+        }
         @media (max-width:980px){
-            .page-grid,.contact-grid{grid-template-columns:1fr}
+            .page-grid,
+            .social-grid,
+            .contact-grid{grid-template-columns:1fr}
         }
         @media (max-width:720px){
-            .shell{width:100%}
+            .shell{width:calc(100% - 24px)}
             .top,
-            .nav,
             .ticker,
+            .flash-stack,
+            .social-band,
             .page-hero,
             .contact-band,
             .site-footer{
-                width:100%;
-                margin-left:0;
-                margin-right:0;
+                width:calc(100% - 24px);
+                margin-left:auto;
+                margin-right:auto;
             }
-            .top{min-height:180px}
+            .top{
+                min-height:280px;
+                background-image:url('{{ brand_banner_mobile_url }}');
+            }
+            .nav{
+                width:auto;
+                margin:12px 10px 0 auto;
+                border:0;
+                background:transparent;
+                backdrop-filter:none;
+                box-shadow:none;
+            }
             .nav-bar{
                 display:flex;
                 align-items:center;
                 justify-content:flex-end;
-                padding:10px;
+                padding:0;
             }
             .nav-toggle{display:inline-flex}
             .nav-inner{
@@ -429,14 +639,68 @@
                 flex-direction:column;
                 align-items:stretch;
                 gap:8px;
-                padding:0 10px 12px;
+                min-width:220px;
+                margin-top:10px;
+                padding:12px;
+                border:1px solid rgba(255,255,255,.66);
+                border-radius:18px;
+                background:rgba(248,252,255,.94);
+                backdrop-filter:blur(16px);
+                box-shadow:0 14px 35px rgba(24,74,108,.12);
             }
             .nav.is-open .nav-inner{display:flex}
             .nav a{width:100%}
+            .ticker{
+                display:grid;
+                grid-template-columns:30px minmax(0,1fr);
+                align-items:center;
+                flex-wrap:nowrap;
+                height:56px;
+                min-height:56px;
+                padding:0 14px;
+                overflow:hidden;
+            }
+            .ticker strong{
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                width:30px;
+                height:30px;
+                margin:0;
+                padding:0;
+                line-height:1;
+            }
+            .ticker strong .icon{
+                display:block;
+                width:18px;
+                height:18px;
+            }
+            .ticker-rotator{
+                min-width:0;
+                align-items:center;
+                overflow:hidden;
+            }
+            .ticker-item{
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                line-height:1.25;
+            }
             .page-hero{padding:28px 22px}
             .page-grid{gap:16px;padding:20px 0 32px}
+            .social-band,
             .contact-band{padding:20px;border-radius:20px}
-            .ticker-item{white-space:normal}
+            .social-card{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+            .social-card-main{
+                width:100%;
+            }
+            .social-card-cta{
+                align-self:flex-start;
+            }
+            .contact-form-fields{grid-template-columns:1fr}
         }
         {% block extra_css %}{% endblock %}
     </style>
@@ -516,7 +780,7 @@
             <path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v3H6v4h3v5h4v-5h3.2l.8-4H13V9c0-.6.4-1 1-1z"></path>
         </symbol>
     </svg>
-    <header class="shell top" aria-label="Banner institucional"></header>
+    <a class="shell top" href="{% url 'core:home' %}" aria-label="Ir al inicio"></a>
     <nav class="shell nav" data-nav>
         <div class="nav-bar">
             <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-links" aria-label="Abrir menu" data-nav-toggle>
@@ -537,7 +801,7 @@
     </nav>
     {% block ticker %}
         <div class="shell ticker" data-ticker>
-            <strong><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>Novedades</strong>
+            <strong aria-label="Novedades"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg></strong>
             <div class="ticker-rotator">
                 {% for item in ticker_items %}
                     <span class="ticker-item{% if forloop.first %} is-active{% endif %}">
@@ -549,42 +813,141 @@
             </div>
         </div>
     {% endblock %}
+    {% if messages %}
+        <div class="flash-stack" aria-label="Mensajes del sitio">
+            {% for message in messages %}
+                <div class="flash {{ message.tags|default:'info' }}" data-flash-message>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
     {% block content %}{% endblock %}
-    <section class="contact-band" aria-label="Contacto y redes">
+    {% if social_links %}
+    <section class="social-band" aria-label="Redes sociales">
+        <div class="social-grid">
+            <div class="social-copy">
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Redes</div>
+                <h2>Seguimos compartiendo el trabajo cotidiano junto a la comunidad</h2>
+                <p>Este es el unico bloque de redes del sitio. Desde aca centralizamos nuestras novedades, convocatorias y registros de cada actividad.</p>
+            </div>
+            <div class="social-actions">
+                {% for link in social_links %}
+                    <a class="social-card {% if 'Instagram' in link.name %}is-instagram{% elif 'Facebook' in link.name %}is-facebook{% endif %}" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.cta }}">
+                        <span class="social-card-main">
+                            <span class="icon-chip">
+                                <svg class="icon icon-sm">
+                                    <use href="{% if 'Instagram' in link.name %}#icon-instagram{% elif 'Facebook' in link.name %}#icon-facebook{% else %}#icon-network{% endif %}"></use>
+                                </svg>
+                            </span>
+                            <span class="social-card-copy">
+                                <strong>{{ link.name }}</strong>
+                                <span>{{ link.handle }}</span>
+                            </span>
+                        </span>
+                        <span class="social-card-cta">
+                            {{ link.cta }}
+                            <svg class="icon icon-sm"><use href="#icon-arrow-right"></use></svg>
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <section class="contact-band" aria-label="Contacto">
         <div class="contact-grid">
             <div class="contact-panel">
                 <div class="label"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Contacto</div>
                 <div class="contact-intro">
-                    <h2>Conversemos sobre alianzas, acompanamiento y proyectos con impacto social</h2>
-                    <p>Estamos abiertos a articular con familias, instituciones, organizaciones, voluntariado y actores que compartan una mirada de desarrollo humano integral.</p>
+                    <h2>Conversemos sobre alianzas, acompañamiento y proyectos con impacto social</h2>
+                    <p>Si queres comunicarte con la fundacion, abajo tenes nuestros datos de contacto y un formulario para escribirnos desde el sitio.</p>
                 </div>
                 <div class="contact-actions">
-                    <a class="contact-pill" href="mailto:contacto@winay.local">
+                    <a class="contact-pill" href="mailto:{{ contact_email }}">
                         <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg></span>
-                        <div><strong>Email</strong><span>contacto@winay.local</span></div>
+                        <div><strong>Email</strong><span>{{ contact_email }}</span></div>
                     </a>
-                    <a class="contact-pill" href="tel:+540000000000">
+                    <a class="contact-pill" href="tel:{{ contact_phone|cut:' ' }}">
                         <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-phone"></use></svg></span>
-                        <div><strong>Telefono</strong><span>+54 000 000 0000</span></div>
-                    </a>
-                    <a class="contact-pill" href="#" aria-label="WhatsApp de Fundacion Winay">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-whatsapp"></use></svg></span>
-                        <div><strong>WhatsApp</strong><span>Canal directo para consultas y articulacion</span></div>
+                        <div><strong>Telefono</strong><span>{{ contact_phone }}</span></div>
                     </a>
                 </div>
             </div>
-            <div class="social-panel">
-                <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Redes</div>
-                <p>Compartimos actividades, convocatorias y el trabajo cotidiano que sostenemos junto a la comunidad.</p>
-                <div class="social-grid">
-                    <a class="social-card" href="#" aria-label="Instagram de Fundacion Winay">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-instagram"></use></svg></span>
-                        <div><strong>Instagram</strong><span>@fundacionwinay</span></div>
-                    </a>
-                    <a class="social-card" href="#" aria-label="Facebook de Fundacion Winay">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-facebook"></use></svg></span>
-                        <div><strong>Facebook</strong><span>Fundacion Winay</span></div>
-                    </a>
+            <div class="contact-form-wrap">
+                <div class="contact-form-card">
+                    <div class="label"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Formulario</div>
+                    <p>Dejanos tu mensaje y te respondemos por el canal que nos indiques.</p>
+                    <form class="contact-form" method="post" action="{% url 'core:contact_submit' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        {% if contact_form.non_field_errors %}
+                            <ul class="form-errors">
+                                {% for error in contact_form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <div class="contact-form-fields">
+                            <div class="form-field">
+                                <label for="{{ contact_form.name.id_for_label }}">{{ contact_form.name.label }}</label>
+                                {{ contact_form.name }}
+                                {% if contact_form.name.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in contact_form.name.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ contact_form.email.id_for_label }}">{{ contact_form.email.label }}</label>
+                                {{ contact_form.email }}
+                                {% if contact_form.email.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in contact_form.email.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ contact_form.phone.id_for_label }}">{{ contact_form.phone.label }}</label>
+                                {{ contact_form.phone }}
+                                {% if contact_form.phone.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in contact_form.phone.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ contact_form.subject.id_for_label }}">{{ contact_form.subject.label }}</label>
+                                {{ contact_form.subject }}
+                                {% if contact_form.subject.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in contact_form.subject.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="form-field is-full">
+                                <label for="{{ contact_form.message.id_for_label }}">{{ contact_form.message.label }}</label>
+                                {{ contact_form.message }}
+                                {% if contact_form.message.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in contact_form.message.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <button class="btn contact-submit" type="submit">
+                            <svg class="icon icon-sm"><use href="#icon-arrow-right"></use></svg>
+                            Enviar mensaje
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -645,6 +1008,36 @@
                 index = (index + 1) % items.length;
                 items[index].classList.add('is-active');
             }, 3600);
+        }());
+
+        (function () {
+            var messages = document.querySelectorAll('[data-flash-message]');
+            if (!messages.length) return;
+
+            window.setTimeout(function () {
+                messages.forEach(function (message) {
+                    message.style.transition = 'opacity .35s ease, transform .35s ease';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateY(-6px)';
+
+                    window.setTimeout(function () {
+                        message.remove();
+                    }, 380);
+                });
+            }, 3000);
+        }());
+
+        (function () {
+            document.querySelectorAll('form.contact-form').forEach(function (form) {
+                form.addEventListener('submit', function () {
+                    var button = form.querySelector('button[type="submit"]');
+                    if (!button || button.disabled) return;
+
+                    button.disabled = true;
+                    button.classList.add('is-loading');
+                    button.innerHTML = '<span class="button-spinner" aria-hidden="true"></span><span>Enviando...</span>';
+                });
+            });
         }());
     </script>
 </body>

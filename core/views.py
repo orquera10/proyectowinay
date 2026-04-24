@@ -1,8 +1,15 @@
+import os
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.html import escape
 from django.utils import timezone
 
+from .forms import ContactForm
 from .models import Post
 
 
@@ -106,7 +113,7 @@ INFO_PAGES = {
 }
 
 
-def get_shared_context(current_page):
+def get_shared_context(current_page, contact_form=None):
     ticker_items = list(
         Post.objects.filter(
             is_published=True,
@@ -116,13 +123,31 @@ def get_shared_context(current_page):
     return {
         'nav_pages': NAV_PAGES,
         'current_page': current_page,
-        'brand_banner_url': f"{settings.MEDIA_URL}winayBanner.png",
-        'favicon_url': f"{settings.MEDIA_URL}winayLogo.png",
+        'brand_banner_url': f"{settings.STATIC_URL}winayBanner.png",
+        'brand_banner_mobile_url': f"{settings.STATIC_URL}logoCel.png",
+        'favicon_url': f"{settings.STATIC_URL}winayLogo.png",
         'ticker_items': ticker_items or TICKER_FALLBACK,
+        'social_links': [
+            {
+                'name': 'Instagram',
+                'url': os.getenv('INSTAGRAM_URL', 'https://www.instagram.com/fundacionwinay'),
+                'handle': os.getenv('INSTAGRAM_HANDLE', '@fundacionwinay'),
+                'cta': 'Seguinos en Instagram',
+            },
+            {
+                'name': 'Facebook',
+                'url': os.getenv('FACEBOOK_URL', 'https://www.facebook.com/tupagina'),
+                'handle': os.getenv('FACEBOOK_HANDLE', 'Fundacion Winay'),
+                'cta': 'Seguinos en Facebook',
+            },
+        ],
+        'contact_email': os.getenv('CONTACT_EMAIL', 'contacto@winay.local'),
+        'contact_phone': os.getenv('CONTACT_PHONE', '+54 000 000 0000'),
+        'contact_form': contact_form or ContactForm(),
     }
 
 
-def home(request):
+def build_home_context(request, contact_form=None):
     posts = Post.objects.filter(
         is_published=True,
         published_at__lte=timezone.now(),
@@ -136,7 +161,7 @@ def home(request):
         supplemental_posts = posts.exclude(pk__in=featured_ids)[: 6 - len(featured_posts)]
         featured_posts.extend(supplemental_posts)
     recent_posts = list(posts[:6])
-    posts_paginator = Paginator(posts, 6)
+    posts_paginator = Paginator(posts, 8)
     posts_page = posts_paginator.get_page(request.GET.get('page'))
 
     fallback_services = [
@@ -205,8 +230,102 @@ def home(request):
         'posts_page': posts_page,
         'search_query': search_query,
     }
-    context.update(get_shared_context('home'))
-    return render(request, 'core/home.html', context)
+    context.update(get_shared_context('home', contact_form=contact_form))
+    return context
+
+
+def home(request):
+    return render(request, 'core/home.html', build_home_context(request))
+
+
+def contact_submit(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    form = ContactForm(request.POST)
+    redirect_to = request.POST.get('next') or reverse('core:home')
+
+    if not form.is_valid():
+        messages.error(request, 'Revisa el formulario de contacto y completa los campos requeridos.')
+        if redirect_to == reverse('core:home'):
+            return render(request, 'core/home.html', build_home_context(request, contact_form=form))
+        return redirect(redirect_to)
+
+    contact_email = os.getenv('CONTACT_EMAIL', 'contacto@winay.local')
+    name = form.cleaned_data['name']
+    sender_email = form.cleaned_data['email']
+    phone = form.cleaned_data['phone'].strip()
+    phone_display = phone or 'No indicado'
+    subject = form.cleaned_data['subject']
+    message = form.cleaned_data['message']
+    plain_message = '\n'.join(
+        [
+            'Nuevo mensaje recibido desde la web de Fundacion Winay',
+            '',
+            f'Nombre: {name}',
+            f'Email: {sender_email}',
+            f'Telefono: {phone_display}',
+            f'Asunto: {subject}',
+            '',
+            'Mensaje:',
+            message,
+        ]
+    )
+    html_message = f"""
+    <div style="font-family:Arial,sans-serif;color:#163247;line-height:1.6">
+        <div style="max-width:620px;border:1px solid #dceef8;border-radius:18px;overflow:hidden">
+            <div style="background:#2c7fb8;color:#ffffff;padding:18px 22px">
+                <h2 style="margin:0;font-size:20px">Nuevo mensaje desde la web</h2>
+                <p style="margin:6px 0 0;color:#e8f6ff">Fundacion Winay</p>
+            </div>
+            <div style="padding:22px;background:#f8fcff">
+                <p style="margin:0 0 16px">Una persona completo el formulario de contacto.</p>
+                <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+                    <tr>
+                        <td style="padding:8px 0;color:#587186;width:110px">Nombre</td>
+                        <td style="padding:8px 0;font-weight:bold">{escape(name)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#587186">Email</td>
+                        <td style="padding:8px 0"><a href="mailto:{escape(sender_email)}">{escape(sender_email)}</a></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#587186">Telefono</td>
+                        <td style="padding:8px 0">{escape(phone_display)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#587186">Asunto</td>
+                        <td style="padding:8px 0">{escape(subject)}</td>
+                    </tr>
+                </table>
+                <div style="border-top:1px solid #dceef8;padding-top:16px">
+                    <strong style="display:block;margin-bottom:8px">Mensaje</strong>
+                    <div style="white-space:pre-wrap;background:#ffffff;border:1px solid #dceef8;border-radius:14px;padding:14px">{escape(message)}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    """
+
+    try:
+        email = EmailMultiAlternatives(
+            subject=f'[Web Winay] {subject}',
+            body=plain_message,
+            from_email=os.getenv('DEFAULT_FROM_EMAIL', contact_email),
+            to=[contact_email],
+            reply_to=[sender_email],
+        )
+        email.attach_alternative(html_message, 'text/html')
+        email.send(fail_silently=False)
+    except Exception:
+        messages.warning(
+            request,
+            'Recibimos tu mensaje, pero el envio automatico no esta configurado todavia. Usa el email de contacto mientras terminamos esa integracion.',
+        )
+    else:
+        messages.success(request, 'Tu mensaje fue enviado correctamente. Gracias por escribirnos.')
+
+    return redirect(redirect_to)
 
 
 def post_detail(request, slug):
