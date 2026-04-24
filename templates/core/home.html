@@ -278,11 +278,21 @@
         @media (max-width:640px){
             .featured-wrap,
             .post-feed{
-                width:100%;
+                width:calc(100% - 24px);
+                margin-left:auto;
+                margin-right:auto;
                 padding-left:0;
                 padding-right:0;
             }
             .feed-search{flex-direction:column;align-items:stretch}
+            .feed-search input{
+                height:50px;
+                padding:0 16px;
+                font-size:1rem;
+            }
+            .feed-search input {
+                flex: none;
+            }
             .featured-grid,
             .post-grid{gap:12px}
             .post-grid{grid-template-columns:1fr}
